@@ -1,9 +1,9 @@
 /*
  * @Author: suqi04
  * @Date: 2021-07-23 18:27:20
- * @LastEditTime: 2024-03-18 09:25:20
+ * @LastEditTime: 2024-03-22 18:39:49
  * @LastEditors: suqi04
- * @FilePath: /baidu/final-phrase-demo/vue.config.js
+ * @FilePath: /final-phrase-demo/vue.config.js
  */
 'use strict';
 const path = require('path');
@@ -45,6 +45,7 @@ module.exports = {
             errors: true
         }
     },
+  
     configureWebpack: {
         resolve: {
             alias: {
@@ -63,6 +64,15 @@ module.exports = {
                 jQuery: 'jquery'
             })
         ],
+    },
+    pluginOptions: {
+        "style-resources-loader": {
+            preProcessor: "less",
+            patterns: [
+              
+              path.resolve(__dirname, "src/style/index.less"),
+            ],
+        }
     },
     chainWebpack(config) {
         config.module

@@ -1,22 +1,19 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-16 18:25:55
- * @LastEditTime: 2024-03-19 19:47:20
- * @LastEditors: huangwensong
+ * @LastEditTime: 2024-03-22 20:54:07
+ * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/Home.vue
  * @Description: 文件描述
 -->
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-  </div>
+    <div class=""></div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-
-@Options({
-  components: {},
-})
-export default class Home extends Vue {}
+<script setup lang="ts">
+    import { ref, reactive } from '@vue/reactivity';
 </script>
+
+<style lang="less" scoped>
+
+</style>
