@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-23 18:18:50
+ * @LastEditTime: 2024-03-23 19:55:09
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
@@ -28,6 +28,6 @@ import loginWide from '@/components/login/index.vue'
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    background: linear-gradient(to bottom, #f2f3f7, #549fffd8);
+    background: @backGroundColor;
 }
 </style>

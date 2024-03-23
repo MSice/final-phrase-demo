@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-23 18:12:03
+ * @LastEditTime: 2024-03-23 19:54:58
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -146,8 +146,8 @@ onMounted(() => {
     min-width: @ScreenMinWidth;
     position: relative;
     box-sizing: border-box;
-    // background: linear-gradient(to bottom, #f2f3f7, #9cc6fcd8);
-    background: linear-gradient(to bottom, #f2f3f7, #549fffd8);
+    background: @backGroundColor;
+    // background: linear-gradient(to bottom, #f2f3f7, #549fffd8);
     position: relative; /* 相对定位 */
     width: 100%; /* 视频宽度 */
     height: 100vh; /* 视频高度 */
