@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-22 20:48:27
+ * @LastEditTime: 2024-03-23 18:12:03
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -40,14 +40,16 @@
                 {{ text[2] }}
             </p>
             <div class="home-page-control">
-                <el-button
-                    type="primary"
-                    class="start-create-btn"
-                >开始创作</el-button>
-                <el-button
-                    type="primary"
-                    class="start-create-btn"
-                >了解更多</el-button>
+                <span>
+                    <el-button
+                        type="primary"
+                        class="start-create-btn"
+                    >开始创作</el-button>
+                    <el-button
+                        type="primary"
+                        class="start-create-btn margin-btn"
+                    >了解更多</el-button>
+                </span>
             </div>
         </div>
     </div>
@@ -55,6 +57,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+const $route = useRoute();
+console.log($route.path);
+
 const alrentText = [
     ['「', '我', '们', '不', '能', '创', '造'],
     ['100', '分'],
@@ -110,15 +116,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@font-face {
-    font-family: '阿里妈妈东方大楷 Regular';
-    font-weight: 400;
-    src: url('//at.alicdn.com/wf/webfont/m5ecIWxOJl5e/fYUTCFFlhDuq.woff2')
-            format('woff2'),
-        url('//at.alicdn.com/wf/webfont/m5ecIWxOJl5e/CR200aZBtj7h.woff')
-            format('woff');
-    font-display: swap;
-}
 .home-page {
     min-height: max(100vh, 735px);
 }
@@ -126,11 +123,14 @@ onMounted(() => {
     font-size: min(150px, max(10vw, 110px));
 }
 .home-page .home-page-alrent {
-    font-size: min(35px, max(2.9vw, 27px));
+    font-size: min(30px, max(2.5vw, 25px));
     letter-spacing: 2px;
 }
 .home-page-name span:last-child {
     /* margin-left: min(50px, max(35px, 5vw)); */
+}
+.margin-btn {
+    margin-left: min(200px, max(13vw, 150px))!important;
 }
 .start-create-btn {
     font-size: min(20px, max(1.5vw, 17px));
@@ -153,6 +153,10 @@ onMounted(() => {
     height: 100vh; /* 视频高度 */
     overflow: hidden; /* 隐藏溢出的视频部分 */
     color: @TextColor;
+    // background-image: url('./test.jpg');
+    // background-repeat: no-repeat;
+    // background-size: cover;
+    // background-position: center;
 
     .start-create-btn {
         height: 50px;
@@ -194,10 +198,6 @@ onMounted(() => {
             font-size: 14px;
         }
     }
-    @font-face {
-        font-family: 'Archivo Narrow';
-        src: url('https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap');
-    }
     &-name {
         font-weight: 600;
         height: 40vh;
@@ -215,7 +215,8 @@ onMounted(() => {
         }
     }
     &-alrent {
-        font-family: '阿里妈妈东方大楷 Regular';
+        font-family: 'Noto Sans SC';
+        font-weight: 1000;
         text-align: center;
         font-size: 35px;
         color: #666;
@@ -225,9 +226,8 @@ onMounted(() => {
         box-sizing: border-box;
         height: 200px;
         width: 100%;
-        padding: 0 30%;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         .start-create-btn:last-child {
             background-image: none;

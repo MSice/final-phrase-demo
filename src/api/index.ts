@@ -1,19 +1,21 @@
 /*
  * @Author: huangwensong
  * @Date: 2024-03-19 21:09:18
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-19 21:12:02
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-23 17:09:35
  * @FilePath: /final-phrase-demo/src/api/index.ts
  * @Description:
  */
 import { GET, POST } from "./request";
+
+const reg = '/mock'
 
 /**
  * 获取用户信息
  * @param {}
  * @returns
  */
-export const getUserInfo = () => GET("/userInfo", {}, { isToken: true });
+export const getUserInfo = () => GET(`${reg}/userInfo`, {}, { isToken: true });
 
 /**
  * 登陆

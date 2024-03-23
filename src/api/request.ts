@@ -1,8 +1,8 @@
 /*
  * @Author: huangwensong
  * @Date: 2024-03-19 19:44:07
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-19 21:08:28
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-23 17:10:47
  * @FilePath: /final-phrase-demo/src/api/request.ts
  * @Description:
  */
@@ -58,6 +58,8 @@ function requestAuth(
  * 请求成功,检查请求头
  */
 function responseSuccess(response: AxiosResponse<ResponseDataType>) {
+    console.log(response);
+    
   return response;
 }
 
