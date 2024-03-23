@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-23 17:41:41
- * @LastEditTime: 2024-03-23 19:41:08
+ * @LastEditTime: 2024-03-23 19:49:59
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/index.vue
  * @Description: 文件描述
@@ -22,9 +22,11 @@ import { ref, reactive } from 'vue';
 .creation {
     position: relative;
     width: 100%;
+    min-height: calc(100vh - @headerHeight);
     .background-dom {
+        position: absolute;
         width: 100%;
-        height: 100vh;
+        height: 100%;
         background-image: @PagPenBackgroundImageDefaultLogo;
         background-position: center;
         background-size: cover;

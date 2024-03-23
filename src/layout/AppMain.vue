@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2022-09-26 15:06:50
- * @LastEditTime: 2024-03-23 17:41:08
+ * @LastEditTime: 2024-03-23 19:45:47
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/layout/AppMain.vue
  * @Description: 路由渲染
@@ -26,9 +26,10 @@ const key = computed(() => {
 })
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import '../style/index.less';
 .app-main {
-    height: 100%;
+    height: calc(100% - @headerHeight);
     width: 100%;
     position: relative;
     overflow: scroll;

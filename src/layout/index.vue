@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-23 17:38:51
- * @LastEditTime: 2024-03-23 17:50:47
+ * @LastEditTime: 2024-03-23 19:43:46
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/layout/index.vue
  * @Description: 文件描述
@@ -20,9 +20,10 @@ import DemoHeader from '../components/header'
 </script>
 
 <style lang="less" scoped>
+@import '../style/index.less';
 .dom-boy {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: calc(100% - @headerHeight);
 }
 </style>
