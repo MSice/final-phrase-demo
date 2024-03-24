@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-23 12:49:51
- * @LastEditTime: 2024-03-23 17:30:45
+ * @LastEditTime: 2024-03-24 12:30:23
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/components/login/index.vue
  * @Description: 登陆页面
@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { getUserInfo } from '@/api';
 import { ref, reactive, watch, watchEffect, onBeforeMount } from 'vue';
-const showLogin = ref(false); // 是否展示登陆框
+const showLogin = ref(true); // 是否展示登陆框
 const loginType = ref('password'); // 登陆类型
 const savePassword = ref(false);
 const loginParams = reactive({
@@ -113,15 +113,15 @@ function closeCallback(done: Function) {
 }
 
 function login() {
-    // getUserInfo().then(data => {
-    //     console.log(data);
+    getUserInfo().then(data => {
+        console.log(data);
         
-    // })
+    })
 }
 
-onBeforeMount(() => {
-    login()
-})
+login()
+
+
 </script>
 
 <style lang="less">

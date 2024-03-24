@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 19:44:07
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-23 17:10:47
+ * @LastEditTime: 2024-03-24 12:35:20
  * @FilePath: /final-phrase-demo/src/api/request.ts
  * @Description:
  */
@@ -65,6 +65,8 @@ function responseSuccess(response: AxiosResponse<ResponseDataType>) {
 
 const checkRes = (res: ResponseDataType) => {
   const { code, message, data } = res;
+
+  console.log(data);
 
   if (code === 200) return data || code;
 
