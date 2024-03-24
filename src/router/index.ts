@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2024-03-24 15:11:53
+ * @LastEditTime: 2024-03-24 15:12:53
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
@@ -12,7 +12,11 @@ import Creation from '../views/creation/index.vue'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'home-page',
+        redirect: { name: 'home' }
+    },
+    {
+        path: '/home',
+        name: 'home',
         component: HomePage
     },
     {
