@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-24 21:46:17
+ * @LastEditTime: 2024-03-24 21:50:17
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-const formParams;
+// const formParams;
 </script>
 
 <style lang="less" scoped>
