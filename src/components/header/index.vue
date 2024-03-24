@@ -16,33 +16,33 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { getUserInfo } from "@/api/index";
+import { reactive, toRefs, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getUserInfo } from '@/api/index';
 const route = useRoute();
 const state = reactive({});
-const noLoginList = ["/home", "/register"];
+const noLoginList = ['/home', '/register'];
 
 onMounted(() => {
-  console.log(route.path);
-  if (route.path !== "./register") getUserInfo();
+    console.log(route.path);
+    if (route.path !== './register') getUserInfo();
 });
 </script>
 <style lang="less" scoped>
 .header {
-  background-color: #fff;
-  height: 78px;
-  padding: 10px;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: space-between;
-  align-items: center;
-  &-left {
-    .logo {
-      height: 44px;
-      width: 147px;
-      margin-left: 10px;
+    background-color: #fff;
+    height: 78px;
+    padding: 10px;
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+    &-left {
+        .logo {
+            height: 44px;
+            width: 147px;
+            margin-left: 10px;
+        }
     }
-  }
 }
 </style>
