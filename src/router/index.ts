@@ -1,13 +1,14 @@
 /*
- * @LastEditTime: 2024-03-24 15:12:53
+ * @LastEditTime: 2024-03-24 21:31:13
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
  */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/home-page/index.vue'
-import Register from '../views/Register/index.vue'
-import Creation from '../views/creation/index.vue'
+import Register from '@/views/Register/index.vue'
+import Creation from '@/views/creation/index.vue'
+import CreationForm from '@/views/creation/form.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -27,7 +28,17 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/creation',
         name: 'Creation',
-        component: Creation
+        children: [
+            {
+                path: '',
+                component: Creation
+            },
+            {
+                path: '/form',
+                name: 'Form',
+                component: CreationForm
+            },
+        ]
     }
 ]
 
