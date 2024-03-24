@@ -1,13 +1,15 @@
 /*
- * @LastEditTime: 2024-03-24 15:12:53
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-24 17:19:43
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
  */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/home-page/index.vue'
-import Register from '../views/Register/index.vue'
+import Register from '../views/register/index.vue'
 import Creation from '../views/creation/index.vue'
+import ShowPlay from '../views/show-play/index.vue'
+import EditPlay from '../views/edit-play/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -28,6 +30,16 @@ const routes: Array<RouteRecordRaw> = [
         path: '/creation',
         name: 'Creation',
         component: Creation
+    },
+    {
+        path: '/showPlay',
+        name: 'ShowPlay',
+        component: ShowPlay
+    },
+    {
+        path: '/editPlay',
+        name: 'EditPlay',
+        component: EditPlay
     }
 ]
 
