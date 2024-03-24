@@ -9,7 +9,7 @@
 <template>
   <div class="header">
     <div class="header-left">
-      <img class="logo" src="../../assets/logo.jpg" alt="" srcset="" />
+      <img class="logo" src="../../assets/images/logo.jpg" alt="" srcset="" />
     </div>
     <div class="header-right"></div>
   </div>

@@ -18,7 +18,7 @@
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
     width: 100%;
-    background-image: url('./assets/homepage.png');
+    background-image: url('./assets/images/homepage.png');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
