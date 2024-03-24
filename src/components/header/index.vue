@@ -2,14 +2,14 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-19 21:14:18
+ * @LastEditTime: 2024-03-24 14:30:10
  * @FilePath: /final-phrase-demo/src/components/header/index.vue
  * @Description: 
 -->
 <template>
   <div class="header">
     <div class="header-left">
-      <img class="logo" src="../../assets/logo.jpg" alt="" srcset="" />
+      <img class="logo" src="../../assets/logo.png" alt="" srcset="" />
     </div>
     <div class="header-right"></div>
   </div>

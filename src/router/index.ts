@@ -1,6 +1,6 @@
 /*
- * @LastEditTime: 2024-03-22 20:53:25
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-24 14:58:08
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
  */
@@ -11,7 +11,11 @@ import Register from '../views/Register/index.vue'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: 'home-page',
+        redirect: { name: 'home' }
+    },
+    {
+        path: '/home',
+        name: 'home',
         component: HomePage
     },
     {
