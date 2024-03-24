@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-24 14:19:09
+ * @LastEditTime: 2024-03-24 15:08:06
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -52,59 +52,95 @@
                 </span>
             </div>
         </div>
+        <el-dialog
+            v-model="showLogin"
+            class="login-dialog"
+            width="350px"
+            :before-close="handleClose"
+        >
+            <template #title>
+                <div class="login-dialog-title">
+                    <img
+                        src="../../assets/images/logo.png"
+                        alt=""
+                    >
+                </div>
+            </template>
+            <div class="login-dialog-type">
+                <span
+                    :class="['text-btn', loginType === 'password' ? 'text-btn-active' : '']"
+                    @click="loginType = 'password'"
+                >密码登陆</span>
+                <span
+                    :class="['text-btn', loginType === 'captcha' ? 'text-btn-active' : '']"
+                    @click="loginType = 'captcha'"
+                >验证码登陆</span>
+            </div>
+            <div class="login-dialog-form">
+                <el-form
+                    :model="loginParams"
+                    label-width="auto"
+                    size="large"
+                >
+                    <el-form-item>
+                        <el-input
+                            v-model="loginParams.username"
+                            placeholder="用户名 | 手机号"
+                        />
+                    </el-form-item>
+                    <el-form-item v-if="loginType === 'password'">
+                        <el-input
+                            v-model="loginParams.username"
+                            placeholder="密码"
+                        />
+                    </el-form-item>
+                    <el-form-item v-else>
+                        <el-input
+                            v-model="loginParams.username"
+                            placeholder="验证码"
+                        >
+                            <template #append>
+                                <span class="form-text-btn">
+                                    获取验证码
+                                </span>
+                            </template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <div class="login-control">
+                            <template v-if="loginType === 'password'">
+                                <el-checkbox v-model="saveLoginPassword">
+                                    <span class="text-btn-hover">记住密码</span>
+                                </el-checkbox>
+
+                                <span class="text-btn-hover">忘记密码</span>
+                            </template>
+                        </div>
+                        <el-button type="primary" class="login-commit-btn">登  陆</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-const alrentText = [
-    ['「', '我', '们', '不', '能', '创', '造'],
-    ['100', '分'],
-    [
-        '的',
-        '脚',
-        '本',
-        ',',
-        '因',
-        '为',
-        '我',
-        '们',
-        '需',
-        '要',
-        '你',
-        '的',
-        '画',
-        '龙',
-        '点',
-        '睛',
-        '」'
-    ]
-];
 let text = reactive([
     '「我们不能创造',
     '100分',
     '的脚本,因为我们需要你的画龙点睛」'
 ]);
 
-// function inputAlrent() {
-//     let firstText = alrentText[0];
-//     let j = 0;
-//     let i = 0;
-//     let timer = setInterval(() => {
-//         console.log(i, alrentText[j].length);
-
-//         if (i === alrentText[j].length) {
-//             j++;
-//             i = 0;
-//         } else if (i < alrentText[j].length) {
-//             text[j] += alrentText[j][i];
-//             i++;
-//         }
-//         if (j >= alrentText.length) {
-//             clearInterval(timer);
-//         }
-//     }, 100);
-// }
+// 登陆弹窗
+const loginType = ref('password');
+const loginParams = reactive({
+    username: '',
+    password: ''
+});
+const saveLoginPassword = ref(false);
+const showLogin = ref(true);
+const handleClose = (done: () => void) => {};
 
 onMounted(() => {
     // inputAlrent();
@@ -126,7 +162,7 @@ onMounted(() => {
     /* margin-left: min(50px, max(35px, 5vw)); */
 }
 .margin-btn {
-    margin-left: min(200px, max(13vw, 150px))!important;
+    margin-left: min(200px, max(13vw, 150px)) !important;
 }
 .start-create-btn {
     font-size: min(20px, max(1.5vw, 17px));
@@ -239,3 +275,69 @@ onMounted(() => {
 }
 </style>
  
+<style lang="less">
+@import '../../style/index.less';
+.login-dialog {
+    border-radius: 10px!important;
+    .el-dialog__body {
+        padding: 0 10px;
+    }
+    .el-form-item {
+        margin-bottom: 30px;
+        .el-input-group__append {
+            background-color: transparent!important;
+        }
+        .form-text-btn {
+            cursor: pointer;
+            color: #4096ef;
+            font-weight: 600;
+        }
+        .login-control {
+            width: 100%;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            .text-btn-hover {
+                color: #595959;
+                font-weight: normal;
+                font-size: 12px;
+            }
+            .text-btn-hover:hover {
+                cursor: pointer;
+            }
+        }
+        .login-commit-btn {
+            width: 100%;
+            letter-spacing: 5px;
+        }
+    }
+    &-title {
+        height: 25px;
+        img {
+            height: 100%;
+        }
+    }
+    &-type {
+        margin: 15px 0 30px !important;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        font-size: @FontSizeSmall;
+        font-weight: 700;
+        .text-btn {
+            user-select: none;
+            cursor: pointer;
+            padding-bottom: 5px;
+            margin-bottom: 2px;
+        }
+        .text-btn-active {
+            border-bottom: 2px solid #4096ef;
+            color: #4096ef;
+            margin-bottom: 0;
+        }
+    }
+}
+</style>
