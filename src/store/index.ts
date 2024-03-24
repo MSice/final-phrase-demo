@@ -1,7 +1,7 @@
 /*
  * @Author: suqi04
  * @Date: 2024-03-16 18:25:55
- * @LastEditTime: 2024-03-24 12:20:52
+ * @LastEditTime: 2024-03-24 12:59:01
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/store/index.ts
  * @Description: 文件描述
@@ -29,3 +29,4 @@ const useStore = () => {
         userName
     }
 }
+export default useStore
