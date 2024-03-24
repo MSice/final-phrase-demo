@@ -1,7 +1,7 @@
 /*
  * @Author: suqi04
  * @Date: 2021-08-06 09:14:11
- * @LastEditTime: 2024-03-24 16:08:14
+ * @LastEditTime: 2024-03-24 19:22:41
  * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/mock/web.js
  * @Description:
@@ -25,7 +25,7 @@ module.exports = [
             res.send({
                 code: 200,
                 data: {
-                    username: 'hws'
+                    name: '用户'
                 },
                 message: 'success'
             })
