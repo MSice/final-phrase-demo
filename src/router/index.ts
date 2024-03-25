@@ -13,7 +13,7 @@ import AppDomConfig from '@/store/fullSituation'
 const { ShowLoaginDialog } = AppDomConfig()
 
 import HomePage from '@/views/home-page/index.vue'
-import Register from '@/views/Register/index.vue'
+import Register from '@/views/register/index.vue'
 import Creation from '@/views/creation/index.vue'
 import CreationForm from '@/views/creation/form.vue'
 import ShowPlay from '../views/show-play/index.vue'
