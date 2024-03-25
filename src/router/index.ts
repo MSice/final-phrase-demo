@@ -1,12 +1,12 @@
 /*
- * @LastEditTime: 2024-03-24 21:49:38
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-25 11:48:36
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
  */
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomePage from '@/views/home-page/index.vue'
-import Register from '@/views/Register/index.vue'
+import Register from '@/views/register/index.vue'
 import Creation from '@/views/creation/index.vue'
 import CreationForm from '@/views/creation/form.vue'
 import ShowPlay from '../views/show-play/index.vue'
@@ -39,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
                 path: '/form',
                 name: 'Form',
                 component: CreationForm
-            },
+            }
         ]
     },
     {
