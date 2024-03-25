@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-25 11:25:34
+ * @LastEditTime: 2024-03-25 20:33:12
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -102,8 +102,34 @@
             <el-button
                 type="primary"
                 link
+                @click="nextEndShow = true"
             >下一步</el-button>
         </div>
+        <transition name="next-end">
+            <div
+                v-show="nextEndShow"
+                class="creation-form-end"
+                @click="nextEndShow = false"
+            >
+                <div
+                    class="creation-btn"
+                    @click.stop
+                >
+                    免费生成6场
+                </div>
+                <div
+                    class="creation-btn creation-btn-vip"
+                    @click.stop
+                >
+                    <img
+                        src="./assets/VIP.png"
+                        alt=""
+                    >
+                    VIP生成全部
+                    <div class="creation-btn-bc">即刻开通</div>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -118,6 +144,7 @@ import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+const nextEndShow = ref(false);
 const detailedScriptTypeList = reactive([
     '悬疑',
     '喜剧',
@@ -131,6 +158,38 @@ const detailedScriptTypeList = reactive([
 const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
 </script>
 
+<style scoped>
+.creation-form-end {
+    padding: max(90px, 10%);
+}
+
+.creation-form-end .creation-btn-vip {
+    background-color: #000000bf !important;
+    border: 2px solid #ffc300 !important;
+    color: #e8c656 !important;
+}
+.creation-form-end .creation-btn-vip img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    transform: translate(50%, -50%);
+}
+.creation-form-end .creation-btn {
+    position: relative;
+    width: 260px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: #4096efd6;
+    line-height: 100px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+}
+</style>
 <style lang="less">
 .form-content {
     .el-form-item__label {
@@ -139,6 +198,30 @@ const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
 }
 </style>
 <style lang="less" scoped>
+.creation-form-end {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    background-color: #00000080;
+    z-index: 2008;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    .creation-btn-bc {
+        width: 50%;
+        height: 25px;
+        position: absolute;
+        font-size: 14px;
+        line-height: 25px;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 50%);
+        border-radius: 5px;
+        color: #595959;
+        background: linear-gradient(to bottom, #e8d2a7, #f2c05c);
+    }
+}
 .creation-form {
     padding: 20px;
     display: flex;
@@ -175,6 +258,30 @@ const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
         .el-button {
             font-size: 16px;
         }
+    }
+}
+.next-end {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    &-enter {
+        transform: translateY(100%);
+    }
+    &-enter-to {
+        transform: translateY(0);
+    }
+    &-leave {
+        transform: scale(1);
+    }
+    &-leave-to {
+        transform: scale(0.1);
+    }
+
+    &-enter-active{
+        transition: transform 0.5s;
+    }
+    &-leave-active {
+        transition: transform 0.2s;
     }
 }
 .mock-inp {

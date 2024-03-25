@@ -2,24 +2,35 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-24 23:37:14
+ * @LastEditTime: 2024-03-25 20:01:32
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
 <template>
     <Header v-if="showHeader"></Header>
-    <div class="main-body">
+    <div :class="['main-body', showHeader ? 'main-body-need-heder' : '']">
         <router-view />
     </div>
     <div class="main-background"></div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, onMounted, ref } from 'vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+const $route = useRoute();
 import Header from '@/components/Header/index.vue';
 import useHeader from '@/components/Header/useHeader';
-
+watch(
+    $route,
+    (val) => {
+        if (['/','/home'].includes(val.path)) {
+            showHeader.value = false
+        } else {
+            showHeader.value = true
+        }
+    },
+    { deep: true }
+);
 const { showHeader } = useHeader();
 </script>
 
@@ -39,9 +50,16 @@ const { showHeader } = useHeader();
     background-repeat: no-repeat;
     position: relative;
     .main-body {
-        height: calc(100% - 60px);
+        height: 100vh;
+        overflow-y: scroll;
         width: 100%;
         z-index: 0;
+    }
+    .main-body-need-heder {
+        height: calc(100vh - @HeaderHeight);
+    }
+    .main-body::-webkit-scrollbar {
+        display: none;
     }
     .main-background {
         position: absolute;
