@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-25 15:13:00
+ * @LastEditTime: 2024-03-25 19:13:37
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -23,9 +23,12 @@
         </video>
         <div class="home-page-box">
             <div class="home-page-header">
+                <Header v-if="userInfo.name"></Header>
                 <el-button
+                    v-else
                     type="primary"
                     class="start-create-btn login-btn"
+                    @click="ShowLoaginDialog = true"
                 >登陆 | 注册</el-button>
             </div>
             <div class="home-page-name">
@@ -56,7 +59,6 @@
             v-model="ShowLoaginDialog"
             class="login-dialog"
             width="350px"
-            :before-close="handleClose"
         >
             <template #title>
                 <div class="login-dialog-title">
@@ -78,25 +80,33 @@
             </div>
             <div class="login-dialog-form">
                 <el-form
+                    ref="loginRuleFormRef"
                     :model="loginParams"
                     label-width="auto"
+                    :rules="rules"
                     size="large"
                 >
-                    <el-form-item>
+                    <el-form-item prop="account">
                         <el-input
-                            v-model="loginParams.username"
-                            placeholder="用户名 | 手机号"
+                            v-model="loginParams.account"
+                            placeholder="手机号"
                         />
                     </el-form-item>
-                    <el-form-item v-if="loginType === 'password'">
+                    <el-form-item
+                        v-if="loginType === 'password'"
+                        prop="password"
+                    >
                         <el-input
-                            v-model="loginParams.username"
+                            v-model="loginParams.password"
                             placeholder="密码"
                         />
                     </el-form-item>
-                    <el-form-item v-else>
+                    <el-form-item
+                        v-else
+                        prop="password"
+                    >
                         <el-input
-                            v-model="loginParams.username"
+                            v-model="loginParams.password"
                             placeholder="验证码"
                         >
                             <template #append>
@@ -116,7 +126,11 @@
                                 <span class="text-btn-hover">忘记密码</span>
                             </template>
                         </div>
-                        <el-button type="primary" class="login-commit-btn">登  陆</el-button>
+                        <el-button
+                            type="primary"
+                            class="login-commit-btn"
+                            @click="login(loginRuleFormRef)"
+                        >登 陆</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -125,9 +139,26 @@
 </template>
 
 <script setup lang="ts">
+import Header from '@/components/Header/index.vue';
+
+import type { FormInstance, FormRules } from 'element-plus';
+
+import AppUserInfo from '@/store/userInfo';
+const { userInfo } = AppUserInfo();
+
+import { ElMessage } from 'element-plus';
+import { getUserInfo } from '@/api/index';
+
 import { ref, reactive, onMounted } from 'vue';
-import AppDomConfig from '@/store/fullSituation'
-const { ShowLoaginDialog } = AppDomConfig()
+import SQLTest from '@/store/SqlTest';
+const { userLoginSql } = SQLTest();
+
+import AppDomConfig from '@/store/fullSituation';
+const { ShowLoaginDialog } = AppDomConfig();
+
+const phoneNumberRegex = /^1[3-9]\d{9}$/; // 手机号效验正则
+
+const loginRuleFormRef = ref<FormInstance>();
 
 let text = reactive([
     '「我们不能创造',
@@ -138,12 +169,81 @@ let text = reactive([
 // 登陆弹窗
 const loginType = ref('password');
 const loginParams = reactive({
-    username: '',
+    account: '',
     password: ''
+});
+const rules = reactive<FormRules<typeof loginParams>>({
+    account: [
+        {
+            validator: (rule: any, value: any, callback: any) => {
+                if (value === '') {
+                    callback(new Error('请输入手机号'));
+                } else {
+                    if (
+                        loginParams.account !== '' &&
+                        !phoneNumberRegex.test(loginParams.account)
+                    ) {
+                        callback(new Error('请输入正确格式的手机号'));
+                    }
+                    callback();
+                }
+            },
+            trigger: 'blur'
+        }
+    ],
+    password: [
+        {
+            validator: (rule: any, value: any, callback: any) => {
+                if (value === '') {
+                    callback(
+                        new Error(
+                            `${
+                                loginType.value === 'password'
+                                    ? '密码'
+                                    : '验证码'
+                            }不能为空`
+                        )
+                    );
+                }
+                callback();
+            },
+            trigger: 'blur'
+        }
+    ]
 });
 const saveLoginPassword = ref(false);
 
 const handleClose = (done: () => void) => {};
+
+function login(formEl: FormInstance | undefined) {
+    if (!formEl) {
+        return;
+    }
+    formEl.validate(valid => {
+        if (valid) {
+            const infos = userLoginSql.filter(
+                item => item.account === loginParams.account
+            );
+            if (infos.length <= 0) {
+                ElMessage.error('账号未注册！');
+                return;
+            } else {
+                if (infos[0].password !== loginParams.password) {
+                    ElMessage.error('密码错误！');
+                    return;
+                }
+            }
+
+            getUserInfo().then(data => {
+                userInfo.name = data.name;
+                ShowLoaginDialog.value = false;
+            });
+        } else {
+            console.log('error submit!');
+            return false;
+        }
+    });
+}
 
 onMounted(() => {
     // inputAlrent();
@@ -281,14 +381,14 @@ onMounted(() => {
 <style lang="less">
 @import '../../style/index.less';
 .login-dialog {
-    border-radius: 10px!important;
+    border-radius: 10px !important;
     .el-dialog__body {
         padding: 0 10px;
     }
     .el-form-item {
         margin-bottom: 30px;
         .el-input-group__append {
-            background-color: transparent!important;
+            background-color: transparent !important;
         }
         .form-text-btn {
             cursor: pointer;

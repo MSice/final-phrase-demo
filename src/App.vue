@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-24 23:37:14
+ * @LastEditTime: 2024-03-25 19:06:32
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
@@ -11,7 +11,7 @@
     <div class="main-body">
         <router-view />
     </div>
-    <div class="main-background"></div>
+    <div :class="['main-background', showHeader ? 'main-body-need-heder' : '']"></div>
 </template>
 
 <script lang="ts" setup>
@@ -39,9 +39,16 @@ const { showHeader } = useHeader();
     background-repeat: no-repeat;
     position: relative;
     .main-body {
-        height: calc(100% - 60px);
+        height: 100vh;
+        overflow-y: scroll;
         width: 100%;
         z-index: 0;
+    }
+    .main-body-need-heder {
+        height: calc(100vh - @HeaderHeight);
+    }
+    .main-body::-webkit-scrollbar {
+        display: none;
     }
     .main-background {
         position: absolute;

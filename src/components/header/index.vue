@@ -1,9 +1,9 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-24 19:27:53
- * @FilePath: /final-phrase-demo/src/components/header/index.vue
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-25 19:29:35
+ * @FilePath: /final-phrase-demo/src/components/Header/index.vue
  * @Description: 
 -->
 <template>
@@ -57,6 +57,7 @@ const { url, name } = toRefs(state);
     justify-content: space-between;
     align-items: center;
     &-left {
+        display: flex;
         .logo {
             height: 36px;
             // width: 147px;
