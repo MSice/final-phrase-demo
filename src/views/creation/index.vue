@@ -76,15 +76,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import paramsStore from '@/store/paramsStore';
-import { ElMessage } from 'element-plus'
-const router = useRouter()
+import { ElMessage } from 'element-plus';
+const router = useRouter();
 
 const { creationFormParams } = paramsStore();
 
-const swiperSelectValue = ref('');
+const swiperSelectValue = ref();
 const elSwiper = ref(null);
 
 function swiperSelectValueChange(val: Number) {
@@ -137,7 +137,7 @@ function nextPath() {
         creationFormParams.agruements = {};
         router.push({
             path: '/creation/form'
-        })
+        });
     } else {
         ElMessage({
             message: '请选择电影类型!',
@@ -190,6 +190,14 @@ function initDomeOnSize() {
     console.log(clientHeight, swiperHeight, dom);
 }
 
+onBeforeMount(() => {
+    for (let i in scriptTypeList) {
+        const item = scriptTypeList[i];
+        if (item.name === creationFormParams.scriptType) {
+            swiperSelectValue.value = parseInt(i, 10)
+        }
+    }
+});
 onMounted(() => {
     initDomeOnSize();
     window.onresize = initDomeOnSize;

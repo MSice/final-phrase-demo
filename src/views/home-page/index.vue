@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-25 19:13:37
+ * @LastEditTime: 2024-03-25 19:41:31
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -47,6 +47,7 @@
                     <el-button
                         type="primary"
                         class="start-create-btn"
+                        @click="startCreation"
                     >开始创作</el-button>
                     <el-button
                         type="primary"
@@ -149,13 +150,15 @@ const { userInfo } = AppUserInfo();
 import { ElMessage } from 'element-plus';
 import { getUserInfo } from '@/api/index';
 
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted } from 'vue';
 import SQLTest from '@/store/SqlTest';
 const { userLoginSql } = SQLTest();
 
 import AppDomConfig from '@/store/fullSituation';
 const { ShowLoaginDialog } = AppDomConfig();
 
+import { useRouter } from 'vue-router';
+const $router = useRouter()
 const phoneNumberRegex = /^1[3-9]\d{9}$/; // 手机号效验正则
 
 const loginRuleFormRef = ref<FormInstance>();
@@ -168,6 +171,10 @@ let text = reactive([
 
 // 登陆弹窗
 const loginType = ref('password');
+
+watch(loginType, () => {
+    loginParams.password = ''
+})
 const loginParams = reactive({
     account: '',
     password: ''
@@ -243,6 +250,15 @@ function login(formEl: FormInstance | undefined) {
             return false;
         }
     });
+}
+
+function startCreation () {
+    if (!userInfo.name) {
+        ShowLoaginDialog.value = true;
+        return;
+    } else {
+        $router.push('/creation')
+    }
 }
 
 onMounted(() => {

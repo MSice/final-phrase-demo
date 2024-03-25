@@ -2,24 +2,35 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-25 19:06:32
+ * @LastEditTime: 2024-03-25 20:01:32
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
 <template>
     <Header v-if="showHeader"></Header>
-    <div class="main-body">
+    <div :class="['main-body', showHeader ? 'main-body-need-heder' : '']">
         <router-view />
     </div>
-    <div :class="['main-background', showHeader ? 'main-body-need-heder' : '']"></div>
+    <div class="main-background"></div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, onMounted, ref } from 'vue';
+import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+const $route = useRoute();
 import Header from '@/components/Header/index.vue';
 import useHeader from '@/components/Header/useHeader';
-
+watch(
+    $route,
+    (val) => {
+        if (['/','/home'].includes(val.path)) {
+            showHeader.value = false
+        } else {
+            showHeader.value = true
+        }
+    },
+    { deep: true }
+);
 const { showHeader } = useHeader();
 </script>
 
