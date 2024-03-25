@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-24 15:08:06
+ * @LastEditTime: 2024-03-25 15:13:00
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -53,7 +53,7 @@
             </div>
         </div>
         <el-dialog
-            v-model="showLogin"
+            v-model="ShowLoaginDialog"
             class="login-dialog"
             width="350px"
             :before-close="handleClose"
@@ -126,6 +126,9 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
+import AppDomConfig from '@/store/fullSituation'
+const { ShowLoaginDialog } = AppDomConfig()
+
 let text = reactive([
     '「我们不能创造',
     '100分',
@@ -139,7 +142,7 @@ const loginParams = reactive({
     password: ''
 });
 const saveLoginPassword = ref(false);
-const showLogin = ref(true);
+
 const handleClose = (done: () => void) => {};
 
 onMounted(() => {
