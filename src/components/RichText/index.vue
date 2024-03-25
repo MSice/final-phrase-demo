@@ -2,13 +2,13 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:20:27
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-24 21:38:11
+ * @LastEditTime: 2024-03-25 20:17:33
  * @FilePath: /final-phrase-demo/src/components/RichText/index.vue
  * @Description:
 -->
 <!--  -->
 <template>
-    <div>
+    <div class="rich-text">
         <quill-editor
             content-type="html"
             :content="state.text"
@@ -77,11 +77,12 @@ function editorBlur(val: any) {
 </script>
 <style lang="less">
 .ql-editor p {
-    font-size: 18px;
+    font-size: 14px;
 }
 .editor {
     line-height: normal !important;
     height: 500px !important;
+    width: 100vw;
 }
 
 .ql-container {

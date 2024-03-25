@@ -2,26 +2,30 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 16:26:33
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 18:05:34
+ * @LastEditTime: 2024-03-25 19:30:26
  * @FilePath: /final-phrase-demo/src/views/show-play/editBtn.vue
  * @Description: 
 -->
 <!--  -->
 <template>
     <div class="edit-btn">
-        <div class="btn" @click="goPage">全文编辑</div>
-        <div class="btn" @click="goPage">场次编辑</div>
+        <div class="btn" @click="goPage(1)">全文编辑</div>
+        <div class="btn" @click="goPage(2)">场次编辑</div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const goPage = () => {
-    router.push('/editPlay');
+const goPage = (type: number) => {
+    router.push({
+        path: '/editPlay',
+        query: {
+            type
+        }
+    });
 };
 </script>
 <style lang="less" scoped>
@@ -30,6 +34,7 @@ const goPage = () => {
     right: 10px;
     top: 80px;
     display: flex;
+    font-size: 14px;
     .btn {
         width: 100px;
         height: 40px;
