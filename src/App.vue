@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-24 17:10:46
+ * @LastEditTime: 2024-03-24 23:37:14
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
@@ -31,6 +31,7 @@ const { showHeader } = useHeader();
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
     width: 100%;
+    min-width: 980px;
     background: @BackgroundColorImg;
     // background-image: @BackgroundImagePurpleLineImg;
     background-position: center;

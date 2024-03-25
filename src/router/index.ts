@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2024-03-24 21:49:38
+ * @LastEditTime: 2024-03-25 09:59:07
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
                 component: Creation
             },
             {
-                path: '/form',
+                path: 'form',
                 name: 'Form',
                 component: CreationForm
             },
