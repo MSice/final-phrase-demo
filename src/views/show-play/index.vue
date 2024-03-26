@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 10:34:22
+ * @LastEditTime: 2024-03-26 10:59:34
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -12,8 +12,10 @@
         <div class="content">
             <div class="menu">
                 <Menu
+                    :key="activeItemId"
                     v-show="showMenu"
                     :menuItems="content"
+                    :activeItemId="activeItemId"
                     @select="scrollToElement"
                     :isCollapsed="isCollapsed"
                     @set-collapsed="
@@ -52,7 +54,9 @@ import PlayInfo from '../../store/palyInfo';
 
 const isCollapsed = ref(false);
 const showMenu = ref(false);
+const activeItemId = ref(1);
 const { state } = PlayInfo();
+const bodyDom: any = document.querySelector('.main-body ');
 
 onMounted(() => {
     function showNextItem(index: number) {
@@ -81,8 +85,7 @@ onMounted(() => {
                 if (counter < paragraphs.length) {
                     container1.appendChild(paragraphs[counter].cloneNode(true));
                     counter++;
-                    console.log(realDom?.scrollHeight);
-                    const bodyDom = document.querySelector('.main-body ');
+                    // 滚动到页面底部
                     bodyDom.scrollTo(0, bodyDom?.scrollHeight);
                     setTimeout(showNextLine, 100); // 控制每行显示的时间间隔，单位为毫秒
                 } else {
@@ -101,6 +104,7 @@ onMounted(() => {
 });
 
 const scrollToElement = (data: any) => {
+    activeItemId.value = data.sessionId;
     const targetElement = document.getElementById(
         `content-item-${data.sessionId}`
     );
@@ -108,6 +112,26 @@ const scrollToElement = (data: any) => {
         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
+
+bodyDom.addEventListener('scroll', function () {
+    for (let i = 0; i < state.content.length; i++) {
+        const item = state.content[i];
+        const targetElement: any = document.getElementById(
+            `content-item-${item.sessionId}`
+        );
+        // 获取目标元素的位置信息
+
+        let elementRect: any = targetElement?.getBoundingClientRect();
+        // 检查元素是否进入视口
+        if (
+            elementRect?.top >= 0 &&
+            elementRect?.bottom <= window.innerHeight
+        ) {
+            // 当元素进入视口时，触发提示
+            activeItemId.value = i + 1;
+        }
+    }
+});
 
 const { title, content } = toRefs(state);
 </script>

@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 14:15:10
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 16:38:35
+ * @LastEditTime: 2024-03-26 10:47:33
  * @FilePath: /final-phrase-demo/src/views/show-play/menu.vue
  * @Description: 
 -->
@@ -36,15 +36,17 @@ const props = defineProps({
     isCollapsed: {
         type: Boolean,
         default: false
+    },
+    activeItemId: {
+        type: Number,
+        default: 1
     }
 });
 
 const emit = defineEmits(['select', 'setCollapsed']);
-const activeItemId = ref(1);
 
 const selectMenuItem = (item: any) => {
     // 触发选中菜单项的事件
-    activeItemId.value = item.sessionId;
     emit('select', item);
 };
 const toggleCollapse = () => {
