@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 19:24:16
+ * @LastEditTime: 2024-03-26 10:34:22
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -81,6 +81,9 @@ onMounted(() => {
                 if (counter < paragraphs.length) {
                     container1.appendChild(paragraphs[counter].cloneNode(true));
                     counter++;
+                    console.log(realDom?.scrollHeight);
+                    const bodyDom = document.querySelector('.main-body ');
+                    bodyDom.scrollTo(0, bodyDom?.scrollHeight);
                     setTimeout(showNextLine, 100); // 控制每行显示的时间间隔，单位为毫秒
                 } else {
                     container1 = null;
