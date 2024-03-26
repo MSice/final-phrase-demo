@@ -1,8 +1,8 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
- * @LastEditors: suqi04
- * @LastEditTime: 2024-03-25 20:01:32
+ * @LastEditors: huangwensong
+ * @LastEditTime: 2024-03-26 14:06:00
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
@@ -22,11 +22,11 @@ import Header from '@/components/Header/index.vue';
 import useHeader from '@/components/Header/useHeader';
 watch(
     $route,
-    (val) => {
-        if (['/','/home'].includes(val.path)) {
-            showHeader.value = false
+    val => {
+        if (['/', '/home'].includes(val.path)) {
+            showHeader.value = false;
         } else {
-            showHeader.value = true
+            showHeader.value = true;
         }
     },
     { deep: true }

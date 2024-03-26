@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:48
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 20:56:38
+ * @LastEditTime: 2024-03-26 11:43:51
  * @FilePath: /final-phrase-demo/src/views/edit-play/ItemContent.vue
  * @Description: 
 -->
@@ -49,6 +49,7 @@ import RichText from '@/components/RichText/index.vue';
 import Title from '@/components/title.vue';
 import PlayInfo from '../../store/palyInfo';
 import { useRouter } from 'vue-router';
+import { textHandle } from '@/utils/index';
 
 const router = useRouter();
 
@@ -60,16 +61,6 @@ const index = ref(0);
 
 const myComputedValue = computed(() => content.value[index.value]);
 
-const textHandle = htmlString => {
-    // 使用正则表达式去除最外层 <div> 标签
-    let regex = /<div[^>]*>(.*?)<\/div>/;
-    let match = htmlString.match(regex);
-    if (match && match.length >= 2) {
-        htmlString = match[1];
-    }
-    return htmlString;
-};
-
 const nextHandle = () => {
     if (index.value === content.value.length - 1) {
         router.push('/showPlay');
@@ -78,15 +69,13 @@ const nextHandle = () => {
         console.log(index);
     }
 };
-
-console.log(myComputedValue, 'myComputedValue');
 </script>
 <style lang="less" scoped>
 .content {
     padding-bottom: 120px;
 }
 .btn-group {
-    background-color: #dceadf;
+    background-color: #f5faf6;
     position: fixed;
     bottom: 0;
     padding: 30px 0;

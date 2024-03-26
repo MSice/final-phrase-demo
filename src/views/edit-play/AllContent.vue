@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:23
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 21:59:39
+ * @LastEditTime: 2024-03-26 11:46:02
  * @FilePath: /final-phrase-demo/src/views/edit-play/allContent.vue
  * @Description: 
 -->
@@ -31,7 +31,6 @@ const { state } = PlayInfo();
 
 const { title, content }: any = toRefs(state);
 const text = ref('');
-const resultText = ref('');
 
 onMounted(() => {
     console.log(content.value);
@@ -40,8 +39,7 @@ onMounted(() => {
     });
 });
 
-const saveInfo = text => {
-    console.log(text, 'text');
+const saveInfo = (text: any) => {
     // 使用正则表达式分割字符串
     const htmlString = textHandle(text);
     let regex = /<h3>(.*?)<\/h3>/g;
@@ -55,10 +53,7 @@ const saveInfo = text => {
         });
     }
 
-    console.log(processedData, 'processedData');
-
     for (let i = 0; i < groups.length; i++) {
-        console.log(processedData[i]);
         if (processedData[i]) {
             content.value[i].sessionTitle = processedData[i].title;
             content.value[i].text = processedData[i].text;
@@ -67,8 +62,6 @@ const saveInfo = text => {
 };
 
 const nextHandle = () => {
-    // 将字符串转换为 DOM 元素
-    // router.push('/showPlay');
     setTimeout(() => {
         router.push('/showPlay');
     }, 100);
@@ -79,7 +72,7 @@ const nextHandle = () => {
     padding-bottom: 120px;
 }
 .btn-group {
-    background-color: #dceadf;
+    background-color: #f5faf6;
     position: fixed;
     bottom: 0;
     padding: 30px 0;

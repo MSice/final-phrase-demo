@@ -23,11 +23,11 @@ import EditPlay from '../views/edit-play/index.vue'
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        redirect: { name: 'home' }
+        redirect: { name: 'Home' }
     },
     {
         path: '/home',
-        name: 'home',
+        name: 'Home',
         component: HomePage
     },
     {

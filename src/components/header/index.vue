@@ -1,9 +1,9 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
- * @LastEditors: suqi04
- * @LastEditTime: 2024-03-25 19:29:35
- * @FilePath: /final-phrase-demo/src/components/Header/index.vue
+ * @LastEditors: huangwensong
+ * @LastEditTime: 2024-03-26 15:53:30
+ * @FilePath: /final-phrase-demo/src/components/header/index.vue
  * @Description: 
 -->
 <template>
@@ -15,8 +15,12 @@
                 alt=""
                 srcset=""
             />
+            <div v-show="isRegister" class="info">
+                <div class="info-line"></div>
+                <div class="info-text">账号注册</div>
+            </div>
         </div>
-        <div class="header-right">
+        <div class="header-right" v-show="!isRegister">
             <span class="title">{{ name }}</span>
             <el-avatar shape="square" :size="40" :src="url" />
         </div>
@@ -27,12 +31,14 @@
 import { reactive, toRefs, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getUserInfo } from '@/api/index';
+import useHeader from './useHeader';
+
+const { isRegister } = useHeader();
 const route = useRoute();
 const state = reactive({
     url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
     name: ''
 });
-const noLoginList = ['/home', '/register'];
 
 onMounted(() => {
     console.log(route.path);
@@ -60,8 +66,24 @@ const { url, name } = toRefs(state);
         display: flex;
         .logo {
             height: 36px;
-            // width: 147px;
             margin-left: 10px;
+        }
+        .info {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            &-line {
+                margin: 0 15px;
+                width: 0;
+                height: 36px;
+                border: 1px solid rgb(98, 96, 96);
+            }
+            &-text {
+                font-size: 24px;
+                line-height: 36px;
+                height: 36px;
+                color: black;
+            }
         }
     }
     &-right {
