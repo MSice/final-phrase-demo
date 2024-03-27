@@ -1,35 +1,32 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-25 19:41:31
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-27 11:30:44
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
 -->
 <template>
     <div class="home-page">
-        <video
-            autoplay
-            loop
-            muted
-            playsinline
-            class="fill-background"
-        >
-            <source
-                src="./homePageVideo.mp4"
-                type="video/mp4"
-            >
+        <video autoplay loop muted playsinline class="fill-background">
+            <source src="./homePageVideo.mp4" type="video/mp4" />
             Your browser does not support the video tag.
         </video>
         <div class="home-page-box">
             <div class="home-page-header">
-                <Header v-if="userInfo.name"></Header>
+                <Header v-if="userInfo.account"></Header>
                 <el-button
                     v-else
                     type="primary"
                     class="start-create-btn login-btn"
-                    @click="ShowLoaginDialog = true"
-                >登陆 | 注册</el-button>
+                    ><span @click="ShowLoaginDialog = true" class="btn"
+                        >登陆</span
+                    >
+                    |
+                    <span @click="$router.push('/register')" class="btn"
+                        >注册</span
+                    ></el-button
+                >
             </div>
             <div class="home-page-name">
                 <span>Final</span>
@@ -48,11 +45,13 @@
                         type="primary"
                         class="start-create-btn"
                         @click="startCreation"
-                    >开始创作</el-button>
+                        >开始创作</el-button
+                    >
                     <el-button
                         type="primary"
                         class="start-create-btn margin-btn"
-                    >了解更多</el-button>
+                        >了解更多</el-button
+                    >
                 </span>
             </div>
         </div>
@@ -63,21 +62,26 @@
         >
             <template #title>
                 <div class="login-dialog-title">
-                    <img
-                        src="../../assets/images/logo.png"
-                        alt=""
-                    >
+                    <img src="../../assets/images/logo.png" alt="" />
                 </div>
             </template>
             <div class="login-dialog-type">
                 <span
-                    :class="['text-btn', loginType === 'password' ? 'text-btn-active' : '']"
+                    :class="[
+                        'text-btn',
+                        loginType === 'password' ? 'text-btn-active' : ''
+                    ]"
                     @click="loginType = 'password'"
-                >密码登陆</span>
+                    >密码登陆</span
+                >
                 <span
-                    :class="['text-btn', loginType === 'captcha' ? 'text-btn-active' : '']"
+                    :class="[
+                        'text-btn',
+                        loginType === 'captcha' ? 'text-btn-active' : ''
+                    ]"
                     @click="loginType = 'captcha'"
-                >验证码登陆</span>
+                    >验证码登陆</span
+                >
             </div>
             <div class="login-dialog-form">
                 <el-form
@@ -102,18 +106,13 @@
                             placeholder="密码"
                         />
                     </el-form-item>
-                    <el-form-item
-                        v-else
-                        prop="password"
-                    >
+                    <el-form-item v-else prop="password">
                         <el-input
                             v-model="loginParams.password"
                             placeholder="验证码"
                         >
                             <template #append>
-                                <span class="form-text-btn">
-                                    获取验证码
-                                </span>
+                                <span class="form-text-btn"> 获取验证码 </span>
                             </template>
                         </el-input>
                     </el-form-item>
@@ -124,14 +123,20 @@
                                     <span class="text-btn-hover">记住密码</span>
                                 </el-checkbox>
 
-                                <span class="text-btn-hover">忘记密码</span>
+                                <!-- <span class="text-btn-hover">忘记密码</span> -->
+                                <span
+                                    @click="$router.push('/register')"
+                                    class="text-btn-hover"
+                                    >账号注册</span
+                                >
                             </template>
                         </div>
                         <el-button
                             type="primary"
                             class="login-commit-btn"
                             @click="login(loginRuleFormRef)"
-                        >登 陆</el-button>
+                            >登 陆</el-button
+                        >
                     </el-form-item>
                 </el-form>
             </div>
@@ -157,8 +162,13 @@ const { userLoginSql } = SQLTest();
 import AppDomConfig from '@/store/fullSituation';
 const { ShowLoaginDialog } = AppDomConfig();
 
-import { useRouter } from 'vue-router';
-const $router = useRouter()
+import { useRouter, useRoute } from 'vue-router';
+const $router = useRouter();
+const $route = useRoute();
+
+console.log($route.query.type);
+$route.query.type && (ShowLoaginDialog.value = true);
+
 const phoneNumberRegex = /^1[3-9]\d{9}$/; // 手机号效验正则
 
 const loginRuleFormRef = ref<FormInstance>();
@@ -173,8 +183,8 @@ let text = reactive([
 const loginType = ref('password');
 
 watch(loginType, () => {
-    loginParams.password = ''
-})
+    loginParams.password = '';
+});
 const loginParams = reactive({
     account: '',
     password: ''
@@ -241,10 +251,12 @@ function login(formEl: FormInstance | undefined) {
                 }
             }
 
-            getUserInfo().then(data => {
-                userInfo.name = data.name;
-                ShowLoaginDialog.value = false;
-            });
+            // getUserInfo().then(data => {
+            //     userInfo.name = data.name;
+            //     ShowLoaginDialog.value = false;
+            // });
+            userInfo.account = loginParams.account;
+            ShowLoaginDialog.value = false;
         } else {
             console.log('error submit!');
             return false;
@@ -252,12 +264,12 @@ function login(formEl: FormInstance | undefined) {
     });
 }
 
-function startCreation () {
-    if (!userInfo.name) {
+function startCreation() {
+    if (!userInfo.account) {
         ShowLoaginDialog.value = true;
         return;
     } else {
-        $router.push('/creation')
+        $router.push('/creation');
     }
 }
 
@@ -393,7 +405,7 @@ onMounted(() => {
     }
 }
 </style>
- 
+
 <style lang="less">
 @import '../../style/index.less';
 .login-dialog {
@@ -458,5 +470,10 @@ onMounted(() => {
             margin-bottom: 0;
         }
     }
+}
+</style>
+<style lang="less" scoped>
+.btn {
+    margin: 0 5px;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:40:18
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 14:07:10
+ * @LastEditTime: 2024-03-27 10:45:22
  * @FilePath: /final-phrase-demo/src/components/Header/useHeader.ts
  * @Description:
  */
@@ -28,7 +28,7 @@ const useHeader = () => {
         route,
         newVal => {
             newVal.name === 'Home' && (showHeader.value = false);
-            newVal.name === 'Register' && (isRegister.value = true);
+            newVal.name === 'Register' ? (isRegister.value = true) : (isRegister.value = false);
         },
         { deep: true }
     );

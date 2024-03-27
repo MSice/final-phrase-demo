@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 10:59:34
+ * @LastEditTime: 2024-03-27 10:21:45
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -52,7 +52,7 @@ import Menu from './menu.vue';
 import EditBtn from './editBtn.vue';
 import PlayInfo from '../../store/palyInfo';
 
-const isCollapsed = ref(false);
+const isCollapsed = ref(true);
 const showMenu = ref(false);
 const activeItemId = ref(1);
 const { state } = PlayInfo();

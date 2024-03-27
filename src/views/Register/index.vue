@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 17:12:59
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 15:55:30
+ * @LastEditTime: 2024-03-27 11:37:31
  * @FilePath: /final-phrase-demo/src/views/Register/index.vue
  * @Description: 
 -->
@@ -208,7 +208,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
             });
             ElMessage.success('注册成功，即将跳转到登陆页面！');
             setTimeout(() => {
-                router.push('/home');
+                router.push({
+                    path: './home',
+                    query: {
+                        type: 1
+                    }
+                });
             }, 1000);
         } else {
             console.log('error submit!');

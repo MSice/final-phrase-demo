@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 14:15:10
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 10:47:33
+ * @LastEditTime: 2024-03-27 10:23:54
  * @FilePath: /final-phrase-demo/src/views/show-play/menu.vue
  * @Description: 
 -->
@@ -15,11 +15,11 @@
         <ul class="sidebar-content">
             <li
                 :class="{ active: activeItemId === item.sessionId }"
-                v-for="item in props.menuItems"
+                v-for="(item, index) in props.menuItems"
                 :key="item.sessionTitle"
                 @click="selectMenuItem(item)"
             >
-                {{ isCollapsed ? item.sessionId : item.sessionTitle }}
+                {{ isCollapsed ? ChOrder(index + 1) : item.sessionTitle }}
             </li>
         </ul>
     </div>
@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import { ref, defineProps, defineEmits } from 'vue';
+import { ChOrder } from '@/utils';
 
 const props = defineProps({
     menuItems: {

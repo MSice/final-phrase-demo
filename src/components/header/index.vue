@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
  * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 15:53:30
+ * @LastEditTime: 2024-03-27 11:36:20
  * @FilePath: /final-phrase-demo/src/components/header/index.vue
  * @Description: 
 -->
@@ -29,12 +29,15 @@
 
 <script lang="ts" setup>
 import { reactive, toRefs, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { getUserInfo } from '@/api/index';
 import useHeader from './useHeader';
+import AppUserInfo from '@/store/userInfo';
+const { userInfo } = AppUserInfo();
 
 const { isRegister } = useHeader();
 const route = useRoute();
+const router = useRouter();
 const state = reactive({
     url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
     name: ''
@@ -43,9 +46,19 @@ const state = reactive({
 onMounted(() => {
     console.log(route.path);
     if (route.path !== './register')
-        getUserInfo().then(user => {
-            state.name = `亲爱的${user.name}, 您好！`;
-        });
+        if (userInfo.account) {
+            // getUserInfo().then(user => {
+            //     state.name = `亲爱的${user.name}, 您好！`;
+            // });
+            state.name = `亲爱的${userInfo.name}, 您好！`;
+        } else {
+            router.push({
+                path: './home',
+                query: {
+                    type: 1
+                }
+            });
+        }
 });
 
 const { url, name } = toRefs(state);
