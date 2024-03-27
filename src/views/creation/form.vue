@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-25 20:33:12
+ * @LastEditTime: 2024-03-27 16:22:09
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -35,7 +35,7 @@
                             :key="index"
                             :label="item"
                             :value="item"
-                            :disabled="item in noneDisableDetailedScriptTypeList"
+                            :disabled="!noneDisableDetailedScriptTypeList.includes(item)"
                         />
                     </el-select>
                 </el-form-item>
@@ -98,7 +98,8 @@
             <el-button
                 type="primary"
                 link
-            >直接生成</el-button>
+                @click.stop="nextPath"
+            >没有想法,直接生成</el-button>
             <el-button
                 type="primary"
                 link
@@ -113,7 +114,7 @@
             >
                 <div
                     class="creation-btn"
-                    @click.stop
+                    @click.stop="nextPath"
                 >
                     免费生成6场
                 </div>
@@ -124,6 +125,7 @@
                     <img
                         src="./assets/VIP.png"
                         alt=""
+                        @click.stop="nextPath"
                     >
                     VIP生成全部
                     <div class="creation-btn-bc">即刻开通</div>
@@ -156,6 +158,12 @@ const detailedScriptTypeList = reactive([
     '体育'
 ]);
 const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
+
+function nextPath() {
+    router.push({
+        path: '/showPlay'
+    });
+}
 </script>
 
 <style scoped>
@@ -277,7 +285,7 @@ const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
         transform: scale(0.1);
     }
 
-    &-enter-active{
+    &-enter-active {
         transition: transform 0.5s;
     }
     &-leave-active {

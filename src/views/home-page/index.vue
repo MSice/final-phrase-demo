@@ -1,15 +1,24 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-27 11:30:44
- * @LastEditors: huangwensong
+ * @LastEditTime: 2024-03-27 19:09:18
+ * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
 -->
 <template>
     <div class="home-page">
-        <video autoplay loop muted playsinline class="fill-background">
-            <source src="./homePageVideo.mp4" type="video/mp4" />
+        <video
+            autoplay
+            loop
+            muted
+            playsinline
+            class="fill-background"
+        >
+            <source
+                src="./homePageVideo.mp4"
+                type="video/mp4"
+            />
             Your browser does not support the video tag.
         </video>
         <div class="home-page-box">
@@ -19,14 +28,15 @@
                     v-else
                     type="primary"
                     class="start-create-btn login-btn"
-                    ><span @click="ShowLoaginDialog = true" class="btn"
-                        >登陆</span
-                    >
+                ><span
+                        @click="ShowLoaginDialog = true"
+                        class="btn"
+                    >登陆</span>
                     |
-                    <span @click="$router.push('/register')" class="btn"
-                        >注册</span
-                    ></el-button
-                >
+                    <span
+                        @click="$router.push('/register')"
+                        class="btn"
+                    >注册</span></el-button>
             </div>
             <div class="home-page-name">
                 <span>Final</span>
@@ -45,13 +55,13 @@
                         type="primary"
                         class="start-create-btn"
                         @click="startCreation"
-                        >开始创作</el-button
-                    >
-                    <el-button
+                    >开始创作</el-button>
+                    <el-link
                         type="primary"
                         class="start-create-btn margin-btn"
-                        >了解更多</el-button
-                    >
+                        href="/introduction"
+                        target="_blank"
+                    >了解更多</el-link>
                 </span>
             </div>
         </div>
@@ -62,7 +72,10 @@
         >
             <template #title>
                 <div class="login-dialog-title">
-                    <img src="../../assets/images/logo.png" alt="" />
+                    <img
+                        src="../../assets/images/logo.png"
+                        alt=""
+                    />
                 </div>
             </template>
             <div class="login-dialog-type">
@@ -72,16 +85,14 @@
                         loginType === 'password' ? 'text-btn-active' : ''
                     ]"
                     @click="loginType = 'password'"
-                    >密码登陆</span
-                >
+                >密码登陆</span>
                 <span
                     :class="[
                         'text-btn',
                         loginType === 'captcha' ? 'text-btn-active' : ''
                     ]"
                     @click="loginType = 'captcha'"
-                    >验证码登陆</span
-                >
+                >验证码登陆</span>
             </div>
             <div class="login-dialog-form">
                 <el-form
@@ -106,13 +117,26 @@
                             placeholder="密码"
                         />
                     </el-form-item>
-                    <el-form-item v-else prop="password">
+                    <el-form-item
+                        v-else
+                        prop="password"
+                    >
                         <el-input
                             v-model="loginParams.password"
                             placeholder="验证码"
+                            autocomplete="off"
                         >
                             <template #append>
-                                <span class="form-text-btn"> 获取验证码 </span>
+                                <span
+                                    @click="getVerificationCode"
+                                    class="form-text-btn"
+                                >
+                                    {{
+                                    verificationTime
+                                        ? verificationTime + 's'
+                                        : '获取验证码'
+                                }}
+                                </span>
                             </template>
                         </el-input>
                     </el-form-item>
@@ -127,16 +151,14 @@
                                 <span
                                     @click="$router.push('/register')"
                                     class="text-btn-hover"
-                                    >账号注册</span
-                                >
+                                >账号注册</span>
                             </template>
                         </div>
                         <el-button
                             type="primary"
                             class="login-commit-btn"
                             @click="login(loginRuleFormRef)"
-                            >登 陆</el-button
-                        >
+                        >登 陆</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -189,6 +211,7 @@ const loginParams = reactive({
     account: '',
     password: ''
 });
+
 const rules = reactive<FormRules<typeof loginParams>>({
     account: [
         {
@@ -232,6 +255,24 @@ const saveLoginPassword = ref(false);
 
 const handleClose = (done: () => void) => {};
 
+const verificationTime = ref(0);
+const getVerificationCode = () => {
+    if (loginParams.account === '') {
+        ElMessage.warning('请输入手机号！');
+        return;
+    }
+    if (verificationTime.value > 0) {
+        return;
+    }
+    verificationTime.value = 60;
+    const timer = setInterval(() => {
+        verificationTime.value--;
+        if (verificationTime.value <= 0) {
+            clearInterval(timer);
+        }
+    }, 1000);
+    ElMessage.success('验证码已发送，请注意查收！');
+};
 function login(formEl: FormInstance | undefined) {
     if (!formEl) {
         return;

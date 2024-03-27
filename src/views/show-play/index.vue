@@ -1,8 +1,8 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-27 10:21:45
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-27 19:15:54
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -25,7 +25,10 @@
                     "
                 ></Menu>
             </div>
-            <div class="text-content" :class="{ collapsed: isCollapsed }">
+            <div
+                class="text-content"
+                :class="{ collapsed: isCollapsed }"
+            >
                 <Title :initial-text="title"></Title>
                 <div class="select-content">
                     <!-- <div
@@ -42,6 +45,17 @@
             </div>
         </div>
         <EditBtn v-show="showMenu"></EditBtn>
+        <div
+            v-if="!showMenu"
+            class="loading-content"
+        >
+            {{ initAiLoadingText }}
+            <div class="loading-point">
+                <div class="bounce-dot"></div>
+                <div class="bounce-dot"></div>
+                <div class="bounce-dot"></div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -52,16 +66,22 @@ import Menu from './menu.vue';
 import EditBtn from './editBtn.vue';
 import PlayInfo from '../../store/palyInfo';
 
+import { useRoute } from 'vue-router';
+const $route = useRoute();
+
 const isCollapsed = ref(true);
 const showMenu = ref(false);
 const activeItemId = ref(1);
-const { state } = PlayInfo();
+const { state, Prequel } = PlayInfo();
+const initAiLoading = ref(true);
+const initAiLoadingText = ref('Final Phrase 思考中');
 const bodyDom: any = document.querySelector('.main-body ');
 
+let paragraph = Prequel;
 onMounted(() => {
     function showNextItem(index: number) {
-        if (index < state.content.length) {
-            const item = state.content[index];
+        if (index < paragraph.content.length) {
+            const item = paragraph.content[index];
             // 创建一个虚拟容器
             const container = document.createElement('div');
             container.innerHTML = item.text;
@@ -83,11 +103,32 @@ onMounted(() => {
             // eslint-disable-next-line no-inner-declarations
             function showNextLine() {
                 if (counter < paragraphs.length) {
-                    container1.appendChild(paragraphs[counter].cloneNode(true));
+                    const pDom = paragraphs[counter].cloneNode(true);
+                    const pDomText = pDom.innerText.split('');
+                    pDom.innerText = '';
+
+                    container1.appendChild(pDom);
                     counter++;
-                    // 滚动到页面底部
-                    bodyDom.scrollTo(0, bodyDom?.scrollHeight);
-                    setTimeout(showNextLine, 100); // 控制每行显示的时间间隔，单位为毫秒
+                    let textIndex = 0;
+                    function insertText(dom: Document) {
+                        if (pDomText.length <= 0) {
+                            bodyDom.scrollTo(0, bodyDom?.scrollHeight);
+                            setTimeout(showNextLine, 50); // 控制每行显示的时间间隔，单位为毫秒
+                            return;
+                        }
+                        pDom.innerText += pDomText[textIndex];
+                        textIndex++;
+                        if (textIndex < pDomText.length) {
+                            setTimeout(() => {
+                                insertText(pDom);
+                            }, 5);
+                        } else {
+                            // 滚动到页面底部
+                            bodyDom.scrollTo(0, bodyDom?.scrollHeight);
+                            setTimeout(showNextLine, 30); // 控制每行显示的时间间隔，单位为毫秒
+                        }
+                    }
+                    insertText(pDom);
                 } else {
                     container1 = null;
                     showNextItem(index + 1); // 执行下一个项
@@ -96,11 +137,33 @@ onMounted(() => {
 
             showNextLine();
         } else {
-            showMenu.value = true;
+            if (initAiLoading.value) {
+                initAiLoading.value = false;
+                initAiLoadingText.value = 'Final Phrase 剧本生成中';
+                setTimeout(() => {
+                    initAiLoadingText.value = 'Final Phrase 开始生成剧本';
+                    // const realDom = document.querySelector('.select-content');
+                    // realDom.innerHTML = ''
+                    paragraph = state;
+                    showNextItem(0);
+                }, 5000);
+            } else {
+                showMenu.value = true;
+            }
         }
     }
 
-    showNextItem(0); // 开始执行第一个项
+    initAiLoadingText.value = 'Final Phrase 剧本简介生成中';
+    if ($route.query.showScript) {
+            paragraph = state;
+            initAiLoading.value = false;
+            initAiLoadingText.value = 'Final Phrase 剧本生成中';
+            showNextItem(0); // 开始执行第一个项
+    } else {
+        setTimeout(() => {
+            showNextItem(0); // 开始执行第一个项
+        }, 1000);
+    }
 });
 
 const scrollToElement = (data: any) => {
@@ -114,8 +177,8 @@ const scrollToElement = (data: any) => {
 };
 
 bodyDom.addEventListener('scroll', function () {
-    for (let i = 0; i < state.content.length; i++) {
-        const item = state.content[i];
+    for (let i = 0; i < paragraph.content.length; i++) {
+        const item = paragraph.content[i];
         const targetElement: any = document.getElementById(
             `content-item-${item.sessionId}`
         );
@@ -152,7 +215,49 @@ const { title, content } = toRefs(state);
         }
     }
     .select-content {
-        padding: 20px;
+        padding: 20px 20px 100px;
+    }
+}
+.loading-content {
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+    width: auto;
+    white-space: nowrap;
+    height: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    /* background-color: #fff; */
+    display: flex;
+    align-items: baseline;
+    flex-direction: row;
+    flex-wrap: wrap;
+    color: #505050b0;
+}
+
+.loading-content .bounce-dot {
+    width: 5px;
+    height: 5px;
+    margin: 0 2px;
+    background-color: #505050b0;
+    border-radius: 50%;
+    display: inline-block;
+    animation: bounce 1s infinite alternate;
+}
+
+.loading-content .loading-content.bounce-dot:nth-child(2) {
+    animation-delay: 0.25s; /* 让第二个点稍微迟于开始 */
+}
+
+.bounce-dot:nth-child(3) {
+    animation-delay: 0.5s; /* 让第三个点稍微迟于开始 */
+}
+@keyframes bounce {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
     }
 }
 </style>

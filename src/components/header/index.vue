@@ -1,9 +1,9 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-27 11:36:20
- * @FilePath: /final-phrase-demo/src/components/header/index.vue
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-27 19:11:02
+ * @FilePath: /final-phrase-demo/src/components/Header/index.vue
  * @Description: 
 -->
 <template>
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="header-right" v-show="!isRegister">
-            <span class="title">{{ name }}</span>
+            <span class="title">{{ userInfo.name }}</span>
             <el-avatar shape="square" :size="40" :src="url" />
         </div>
     </div>
@@ -45,20 +45,20 @@ const state = reactive({
 
 onMounted(() => {
     console.log(route.path);
-    if (route.path !== './register')
-        if (userInfo.account) {
-            // getUserInfo().then(user => {
-            //     state.name = `亲爱的${user.name}, 您好！`;
-            // });
-            state.name = `亲爱的${userInfo.name}, 您好！`;
-        } else {
-            router.push({
-                path: './home',
-                query: {
-                    type: 1
-                }
-            });
-        }
+    // if (route.path !== './register')
+    //     if (userInfo.account) {
+    //         // getUserInfo().then(user => {
+    //         //     state.name = `亲爱的${user.name}, 您好！`;
+    //         // });
+    //         state.name = `亲爱的${userInfo.name}, 您好！`;
+    //     } else {
+    //         router.push({
+    //             path: './home',
+    //             query: {
+    //                 type: 1
+    //             }
+    //         });
+    //     }
 });
 
 const { url, name } = toRefs(state);

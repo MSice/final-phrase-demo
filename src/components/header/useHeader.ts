@@ -1,8 +1,8 @@
 /*
  * @Author: huangwensong
  * @Date: 2024-03-24 14:40:18
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-27 10:45:22
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-27 19:04:11
  * @FilePath: /final-phrase-demo/src/components/Header/useHeader.ts
  * @Description:
  */
@@ -10,7 +10,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-const headerHideList: any = ['/', '/home'];
+const headerHideList: any = ['/', '/home', '/introduction'];
 const isRegister = ref(false);
 
 const useHeader = () => {

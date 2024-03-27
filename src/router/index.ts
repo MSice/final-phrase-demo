@@ -1,5 +1,5 @@
 /*
- * @LastEditTime: 2024-03-25 19:40:51
+ * @LastEditTime: 2024-03-27 19:05:05
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
@@ -16,9 +16,9 @@ import HomePage from '@/views/home-page/index.vue'
 import Register from '@/views/register/index.vue'
 import Creation from '@/views/creation/index.vue'
 import CreationForm from '@/views/creation/form.vue'
-import ShowPlay from '../views/show-play/index.vue'
-import EditPlay from '../views/edit-play/index.vue'
-
+import ShowPlay from '@/views/show-play/index.vue'
+import EditPlay from '@/views/edit-play/index.vue'
+import Introduction from '@/views/introduction/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -58,6 +58,11 @@ const routes: Array<RouteRecordRaw> = [
                 component: CreationForm
             }
         ]
+    },
+    {
+        path: '/introduction',
+        name: 'Introduction',
+        component: Introduction
     },
     {
         path: '/showPlay',

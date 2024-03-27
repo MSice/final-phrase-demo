@@ -1,8 +1,8 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:48
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 11:43:51
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-27 19:17:07
  * @FilePath: /final-phrase-demo/src/views/edit-play/ItemContent.vue
  * @Description: 
 -->
@@ -34,9 +34,12 @@
                     }
                 "
                 link
-                >上一场</el-button
-            >
-            <el-button type="primary" @click="nextHandle" link>{{
+            >上一场</el-button>
+            <el-button
+                type="primary"
+                @click="nextHandle"
+                link
+            >{{
                 index === content.length - 1 ? '完成' : '下一场'
             }}</el-button>
         </div>
@@ -63,7 +66,12 @@ const myComputedValue = computed(() => content.value[index.value]);
 
 const nextHandle = () => {
     if (index.value === content.value.length - 1) {
-        router.push('/showPlay');
+        router.push({
+            path: '/showPlay',
+            query: {
+                showScript: 'read'
+            }
+        });
     } else {
         index.value = index.value + 1;
         console.log(index);
