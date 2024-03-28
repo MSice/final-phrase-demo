@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 19:15:54
+ * @LastEditTime: 2024-03-28 09:28:19
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, toRefs, onMounted } from 'vue';
+import { ref, reactive, toRefs, onMounted, onBeforeUnmount } from 'vue';
 import Title from '@/components/title.vue';
 import Menu from './menu.vue';
 import EditBtn from './editBtn.vue';
@@ -80,6 +80,10 @@ const bodyDom: any = document.querySelector('.main-body ');
 let paragraph = Prequel;
 onMounted(() => {
     function showNextItem(index: number) {
+        if ($route.path !== '/showPlay') {
+            return;
+        }
+
         if (index < paragraph.content.length) {
             const item = paragraph.content[index];
             // 创建一个虚拟容器
@@ -155,10 +159,10 @@ onMounted(() => {
 
     initAiLoadingText.value = 'Final Phrase 剧本简介生成中';
     if ($route.query.showScript) {
-            paragraph = state;
-            initAiLoading.value = false;
-            initAiLoadingText.value = 'Final Phrase 剧本生成中';
-            showNextItem(0); // 开始执行第一个项
+        paragraph = state;
+        initAiLoading.value = false;
+        initAiLoadingText.value = 'Final Phrase 剧本生成中';
+        showNextItem(0); // 开始执行第一个项
     } else {
         setTimeout(() => {
             showNextItem(0); // 开始执行第一个项
@@ -176,8 +180,11 @@ const scrollToElement = (data: any) => {
     }
 };
 
-bodyDom.addEventListener('scroll', function () {
+function onScroll() {
     for (let i = 0; i < paragraph.content.length; i++) {
+        if ($route.path !== '/showPlay') {
+            return;
+        }
         const item = paragraph.content[i];
         const targetElement: any = document.getElementById(
             `content-item-${item.sessionId}`
@@ -194,8 +201,12 @@ bodyDom.addEventListener('scroll', function () {
             activeItemId.value = i + 1;
         }
     }
-});
+}
+bodyDom.addEventListener('scroll', onScroll);
 
+onBeforeUnmount(() => {
+    bodyDom.removeEventListener('scroll', onScroll);
+});
 const { title, content } = toRefs(state);
 </script>
 <style lang="less" scoped>

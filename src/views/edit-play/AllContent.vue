@@ -1,18 +1,26 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:23
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 11:46:02
- * @FilePath: /final-phrase-demo/src/views/edit-play/allContent.vue
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-28 09:59:40
+ * @FilePath: /final-phrase-demo/src/views/edit-play/AllContent.vue
  * @Description: 
 -->
 <!--  -->
 <template>
     <div class="content">
         <Title :initial-text="title"></Title>
-        <RichText :key="text" :content="text" @saveRich="saveInfo"></RichText>
+        <RichText
+            :key="text"
+            :content="text"
+            @saveRich="saveInfo"
+        ></RichText>
         <div class="btn-group">
-            <el-button type="primary" @click="nextHandle" link>完成</el-button>
+            <el-button
+                type="primary"
+                @click="nextHandle"
+                link
+            >完成</el-button>
         </div>
     </div>
 </template>
@@ -40,6 +48,8 @@ onMounted(() => {
 });
 
 const saveInfo = (text: any) => {
+    console.log((text));
+    
     // 使用正则表达式分割字符串
     const htmlString = textHandle(text);
     let regex = /<h3>(.*?)<\/h3>/g;
@@ -63,7 +73,12 @@ const saveInfo = (text: any) => {
 
 const nextHandle = () => {
     setTimeout(() => {
-        router.push('/showPlay');
+        router.push({
+            path: '/showPlay',
+            query: {
+                showScript: 'read'
+            }
+        });
     }, 100);
 };
 </script>

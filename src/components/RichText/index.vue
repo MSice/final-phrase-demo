@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:20:27
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 21:31:37
+ * @LastEditTime: 2024-03-28 10:13:39
  * @FilePath: /final-phrase-demo/src/components/RichText/index.vue
  * @Description:
 -->
@@ -10,9 +10,12 @@
 <template>
     <div class="rich-text">
         <quill-editor
+            ref="myQuillEditor"
             content-type="html"
             :content="state.text"
             :options="editorOption"
+            @text-change="change"
+            @update="editorBlur($event)"
             @blur="editorBlur($event)"
         />
     </div>
@@ -25,7 +28,8 @@ import {
     onMounted,
     ref,
     defineProps,
-    defineEmits
+    defineEmits,
+    toRaw
 } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill';
 const props = defineProps({
@@ -41,6 +45,7 @@ const state = reactive({
 
 const emit = defineEmits(['saveRich']);
 
+const myQuillEditor = ref()
 let editorOption = {
     modules: {
         toolbar: [
@@ -58,9 +63,9 @@ let editorOption = {
             [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
             // [{ direction: 'ltl' }], // 文本方向
             // [{ direction: 'rtl' }], // 文本方向
-            // [{ indent: '-1' }, { indent: '+1' }], // 缩进
-            [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
-            [{ script: 'sub' }, { script: 'super' }], // 上标/下标
+            [{ indent: '-1' }, { indent: '+1' }], // 缩进
+            // [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
+            // [{ script: 'sub' }, { script: 'super' }], // 上标/下标
             // ['blockquote', 'code-block'], // 引用  代码块
             ['clean'] // 清除文本格式
             // ['link', 'image', 'video'] // 链接、图片、视频
@@ -69,10 +74,13 @@ let editorOption = {
     }
 };
 
-function editorBlur(val: any) {
-    emit('saveRich', val.value.innerHTML);
-    console.log(val.value.innerHTML);
-    console.log('当前的文本框的内容：' + val);
+function change(val: any) {
+    // console.log(toRaw(myQuillEditor.value).getHTML());
+    // console.log(state.text);
+    
+    emit('saveRich',toRaw(myQuillEditor.value).getHTML());
+    
+    
 }
 </script>
 <style lang="less">
