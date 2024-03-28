@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:20:27
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 19:29:23
+ * @LastEditTime: 2024-03-28 19:58:27
  * @FilePath: /final-phrase-demo/src/components/RichText/index.vue
  * @Description:
 -->
@@ -68,7 +68,6 @@ let editorOption = {
                     { background: [] } // 字体颜色、字体背景颜色
                 ], // 加粗 斜体 下划线 删除线
                 [{ align: [] }], // 对齐方式
-                [{ size: ['small', 'large', 'huge'] }], // 字体大小
                 [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
                 // [{ direction: 'ltl' }], // 文本方向
                 // [{ direction: 'rtl' }], // 文本方向
