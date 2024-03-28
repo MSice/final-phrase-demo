@@ -2,11 +2,13 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 19:17:48
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 22:05:59
+ * @LastEditTime: 2024-03-28 19:24:54
  * @FilePath: /final-phrase-demo/src/store/palyInfo.ts
  * @Description:
  */
 import { ref, reactive } from 'vue';
+const nowTitle = ref('剧本')
+
 const Prequel = reactive({
     title: '《魔法遗迹》介绍',
     content: [
@@ -60,7 +62,8 @@ const state = reactive({
 const PlayInfo = () => {
     return {
         state,
-        Prequel
+        Prequel,
+        nowTitle
     };
 };
 

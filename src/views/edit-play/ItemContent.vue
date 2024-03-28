@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:48
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 19:17:07
+ * @LastEditTime: 2024-03-28 19:26:11
  * @FilePath: /final-phrase-demo/src/views/edit-play/ItemContent.vue
  * @Description: 
 -->
@@ -22,7 +22,7 @@
                 }
             "
         ></RichText>
-        <div class="btn-group">
+        <!-- <div class="btn-group">
             <el-button
                 type="primary"
                 :disabled="index === 0"
@@ -42,45 +42,51 @@
             >{{
                 index === content.length - 1 ? '完成' : '下一场'
             }}</el-button>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, toRefs, onMounted, computed } from 'vue';
+import { ref, toRefs, onMounted, computed, watch } from 'vue';
 import RichText from '@/components/RichText/index.vue';
 import Title from '@/components/title.vue';
 import PlayInfo from '../../store/palyInfo';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { textHandle } from '@/utils/index';
 
 const router = useRouter();
+const $route = useRoute();
 
-const { state } = PlayInfo();
+
+const index = ref(parseInt($route.query.index || 0, 10));
+watch(
+    $route,
+    val => {
+        index.value = parseInt(val.query.index || 0, 10);
+    },
+    {
+        deep: true
+    }
+);
+const { state, nowTitle } = PlayInfo();
 
 const { content }: any = toRefs(state);
 
-const index = ref(0);
-
 const myComputedValue = computed(() => content.value[index.value]);
 
-const nextHandle = () => {
-    if (index.value === content.value.length - 1) {
-        router.push({
-            path: '/showPlay',
-            query: {
-                showScript: 'read'
-            }
-        });
-    } else {
-        index.value = index.value + 1;
-        console.log(index);
+watch(
+    myComputedValue,
+    val => {
+        nowTitle.value = val.sessionTitle;
+    },
+    {
+        deep: true
     }
-};
+);
 </script>
 <style lang="less" scoped>
 .content {
-    padding-bottom: 120px;
+    height: 100%;
 }
 .btn-group {
     background-color: #f5faf6;

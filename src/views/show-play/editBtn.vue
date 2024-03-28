@@ -1,24 +1,51 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-25 16:26:33
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-25 19:30:26
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-28 19:43:15
  * @FilePath: /final-phrase-demo/src/views/show-play/editBtn.vue
  * @Description: 
 -->
 <!--  -->
 <template>
     <div class="edit-btn">
-        <div class="btn" @click="goPage(1)">全文编辑</div>
-        <div class="btn" @click="goPage(2)">场次编辑</div>
+        <div
+            class="btn"
+            @click="goPage(1)"
+        >全文编辑</div>
+        <div
+            class="btn"
+            @click="goPage(2)"
+        >场次编辑</div>
+        <div
+            class="btn"
+            @click="downLoadAll"
+        >下载剧本</div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
+import { defineProps } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { downLoadWordDoc } from '@/utils';
+import PlayInfo from '@/store/palyInfo';
+const { state, Prequel } = PlayInfo();
 
 const router = useRouter();
+const $route = useRoute();
+async function downLoadAll() {
 
+    const dom = state.content.map(item => {
+        return `<h3>${item.sessionTitle}</h3>${item.text}`
+    }).join('')
+    downLoadWordDoc(dom, state.title)
+    if ($route.query.showScript !== 'read') {
+        const dom2 = Prequel.content.map(item => {
+            return `<h3>${item.sessionTitle}</h3>${item.text}`
+        }).join('')
+        downLoadWordDoc(dom2, Prequel.title)
+    }
+}
 const goPage = (type: number) => {
     router.push({
         path: '/editPlay',

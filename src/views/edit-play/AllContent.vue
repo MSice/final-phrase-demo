@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-25 19:43:23
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 09:59:40
+ * @LastEditTime: 2024-03-28 19:26:54
  * @FilePath: /final-phrase-demo/src/views/edit-play/AllContent.vue
  * @Description: 
 -->
@@ -15,13 +15,13 @@
             :content="text"
             @saveRich="saveInfo"
         ></RichText>
-        <div class="btn-group">
+        <!-- <div class="btn-group">
             <el-button
                 type="primary"
                 @click="nextHandle"
                 link
             >完成</el-button>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -35,9 +35,11 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const { state } = PlayInfo();
+const { state, nowTitle } = PlayInfo();
 
 const { title, content }: any = toRefs(state);
+
+nowTitle.value = title.value;
 const text = ref('');
 
 onMounted(() => {
@@ -84,7 +86,7 @@ const nextHandle = () => {
 </script>
 <style lang="less" scoped>
 .content {
-    padding-bottom: 120px;
+    height: 100%;
 }
 .btn-group {
     background-color: #f5faf6;

@@ -1,8 +1,8 @@
 /*
  * @Author: huangwensong
  * @Date: 2024-03-25 21:08:30
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-27 10:23:29
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-28 19:42:34
  * @FilePath: /final-phrase-demo/src/utils/index.ts
  * @Description:
  */
@@ -60,5 +60,27 @@ export function ChOrder(number: number): string | false {
             .replace(/零{1,}/g, '零')
             .replace(/零{1,}$/g, '');
         return res;
+    }
+}
+
+export function downLoadWordDoc(dom: any, name: string = '剧本') {
+    //报告导出word
+    const htmlDocx = require('html-docx-js-typescript');
+    const { saveAs } = require('file-saver');
+    try {
+        const convertedFile = htmlDocx.asBlob(dom);
+
+        // 生成链接并且下载
+        // const fileData = convertedFile
+        //@ts-ignore
+        convertedFile.then(fileData => {
+            saveAs(fileData as Blob, name + '.docx', {
+                encoding: 'UTF-8'
+            });
+        });
+        return true
+    } catch (error) {
+        console.log(error);
+        return false
     }
 }

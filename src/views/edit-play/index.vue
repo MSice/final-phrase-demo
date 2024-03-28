@@ -1,14 +1,14 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:58
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-03-26 11:44:52
+ * @LastEditors: suqi04
+ * @LastEditTime: 2024-03-28 17:50:12
  * @FilePath: /final-phrase-demo/src/views/edit-play/index.vue
  * @Description: 
 -->
 <!--  -->
 <template>
-    <div>
+    <div class="edit-play">
         <AllContent v-if="playType === '1'"></AllContent>
         <ItemContent v-else></ItemContent>
     </div>
@@ -28,4 +28,10 @@ onMounted(() => {
     playType.value = route?.query?.type == '1' ? '1' : '2';
 });
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.edit-play {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+</style>
