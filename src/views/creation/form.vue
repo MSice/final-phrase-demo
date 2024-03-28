@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-27 16:22:09
+ * @LastEditTime: 2024-03-28 16:13:16
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -81,7 +81,7 @@
 
                     <el-input
                         v-model="creationFormParams.agruements.description"
-                        maxlength="300"
+                        maxlength="1500"
                         :rows="10"
                         show-word-limit
                         placeholder="请对您期望的剧情进行简易描述(选填)"

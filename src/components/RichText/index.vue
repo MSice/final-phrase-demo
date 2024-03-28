@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:20:27
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 10:13:39
+ * @LastEditTime: 2024-03-28 16:08:54
  * @FilePath: /final-phrase-demo/src/components/RichText/index.vue
  * @Description:
 -->
@@ -15,13 +15,17 @@
             :content="state.text"
             :options="editorOption"
             @text-change="change"
-            @update="editorBlur($event)"
             @blur="editorBlur($event)"
         />
     </div>
 </template>
 
 <script lang="ts" setup>
+//报告导出word
+import * as htmlDocx from 'html-docx-js-typescript';
+//@ts-ignore
+import { saveAs } from 'file-saver';
+
 import {
     reactive,
     toRefs,
@@ -32,6 +36,8 @@ import {
     toRaw
 } from 'vue';
 import { QuillEditor } from '@vueup/vue-quill';
+//@ts-ignore
+// import * as  from 'quill';
 const props = defineProps({
     content: {
         type: String,
@@ -59,7 +65,6 @@ let editorOption = {
             ], // 加粗 斜体 下划线 删除线
             [{ align: [] }], // 对齐方式
             [{ size: ['small', 'large', 'huge'] }], // 字体大小
-            [{ font: [] }], // 字体种类
             [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
             // [{ direction: 'ltl' }], // 文本方向
             // [{ direction: 'rtl' }], // 文本方向
@@ -77,11 +82,36 @@ let editorOption = {
 function change(val: any) {
     // console.log(toRaw(myQuillEditor.value).getHTML());
     // console.log(state.text);
-    
-    emit('saveRich',toRaw(myQuillEditor.value).getHTML());
-    
-    
+    emit('saveRich', toRaw(myQuillEditor.value).getHTML());
 }
+
+// 下载
+const downloadFile = (htmlstr: any) => {
+    try {
+        const convertedFile = htmlDocx.asBlob(htmlstr);
+
+        // 生成链接并且下载
+        // const fileData = convertedFile
+        convertedFile.then(fileData => {
+            console.log(htmlstr, fileData);
+            saveAs(fileData as Blob, 'row.reportName' + '.docx', {
+                encoding: 'UTF-8'
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+function editorBlur($event: any) {
+    const editor = document.querySelector('.ql-editor');
+    downloadFile(editor?.innerHTML);
+}
+onMounted(() => {
+    // const quill = Quill.find(document.querySelector('.quill-editor'));
+
+    console.log(Quill);
+    
+});
 </script>
 <style lang="less">
 .ql-editor p {

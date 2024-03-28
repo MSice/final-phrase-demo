@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 09:28:19
+ * @LastEditTime: 2024-03-28 12:36:15
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -109,30 +109,38 @@ onMounted(() => {
                 if (counter < paragraphs.length) {
                     const pDom = paragraphs[counter].cloneNode(true);
                     const pDomText = pDom.innerText.split('');
-                    pDom.innerText = '';
+
+                    if (!$route.query.showScript) {
+                        pDom.innerText = '';
+                    }
 
                     container1.appendChild(pDom);
                     counter++;
-                    let textIndex = 0;
-                    function insertText(dom: Document) {
-                        if (pDomText.length <= 0) {
-                            bodyDom.scrollTo(0, bodyDom?.scrollHeight);
-                            setTimeout(showNextLine, 50); // 控制每行显示的时间间隔，单位为毫秒
-                            return;
+                    if (!$route.query.showScript) {
+                        let textIndex = 0;
+                        function insertText(dom: Document) {
+                            if (pDomText.length <= 0) {
+                                bodyDom.scrollTo(0, bodyDom?.scrollHeight);
+                                setTimeout(showNextLine, 50); // 控制每行显示的时间间隔，单位为毫秒
+                                return;
+                            }
+                            pDom.innerText += pDomText[textIndex];
+                            textIndex++;
+                            if (textIndex < pDomText.length) {
+                                setTimeout(() => {
+                                    insertText(pDom);
+                                }, 5);
+                            } else {
+                                // 滚动到页面底部
+                                bodyDom.scrollTo(0, bodyDom?.scrollHeight);
+                                setTimeout(showNextLine, 30); // 控制每行显示的时间间隔，单位为毫秒
+                            }
                         }
-                        pDom.innerText += pDomText[textIndex];
-                        textIndex++;
-                        if (textIndex < pDomText.length) {
-                            setTimeout(() => {
-                                insertText(pDom);
-                            }, 5);
-                        } else {
-                            // 滚动到页面底部
-                            bodyDom.scrollTo(0, bodyDom?.scrollHeight);
-                            setTimeout(showNextLine, 30); // 控制每行显示的时间间隔，单位为毫秒
-                        }
+                        insertText(pDom);
+                    } else {
+                        bodyDom.scrollTo(0, bodyDom?.scrollHeight);
+                        setTimeout(showNextLine, $route.query.showScript ? 50 : 30); // 控制每行显示的时间间隔，单位为毫秒
                     }
-                    insertText(pDom);
                 } else {
                     container1 = null;
                     showNextItem(index + 1); // 执行下一个项

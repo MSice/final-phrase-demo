@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-20 19:27:42
- * @LastEditTime: 2024-03-27 19:09:18
+ * @LastEditTime: 2024-03-28 12:46:04
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/home-page/index.vue
  * @Description: 文件描述
@@ -40,7 +40,7 @@
             </div>
             <div class="home-page-name">
                 <span>Final</span>
-                <span>Perase</span>
+                <span>Phrase</span>
             </div>
             <p class="home-page-alrent">
                 {{ text[0] }}

@@ -2,19 +2,19 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 19:11:02
+ * @LastEditTime: 2024-03-28 12:47:18
  * @FilePath: /final-phrase-demo/src/components/Header/index.vue
  * @Description: 
 -->
 <template>
     <div class="header">
         <div class="header-left">
-            <img
+            <!-- <img
                 class="logo"
                 src="../../assets/images/logo.png"
                 alt=""
                 srcset=""
-            />
+            /> -->
             <div v-show="isRegister" class="info">
                 <div class="info-line"></div>
                 <div class="info-text">账号注册</div>
