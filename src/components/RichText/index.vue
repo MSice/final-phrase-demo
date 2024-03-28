@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 14:20:27
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 16:08:54
+ * @LastEditTime: 2024-03-28 16:16:35
  * @FilePath: /final-phrase-demo/src/components/RichText/index.vue
  * @Description:
 -->
@@ -109,7 +109,7 @@ function editorBlur($event: any) {
 onMounted(() => {
     // const quill = Quill.find(document.querySelector('.quill-editor'));
 
-    console.log(Quill);
+    // console.log(Quill);
     
 });
 </script>
