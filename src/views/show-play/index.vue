@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 12:36:15
+ * @LastEditTime: 2024-03-29 18:40:49
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -49,11 +49,28 @@
             v-if="!showMenu"
             class="loading-content"
         >
-            {{ initAiLoadingText }}
-            <div class="loading-point">
+            <span
+                :class="initAiLoading ? '' : 'loading-text'"
+                id="loading-text"
+            >
+                {{ initAiLoadingText }}
+            </span>
+            <div
+                v-if="initAiLoading"
+                class="loading-point"
+            >
                 <div class="bounce-dot"></div>
                 <div class="bounce-dot"></div>
                 <div class="bounce-dot"></div>
+            </div>
+            <div
+                v-if="!initAiLoading"
+                class="loading-point"
+            >
+                {{ nowPercent.toFixed(2) }}%
+                <!-- <div class="bounce-dot"></div>
+                <div class="bounce-dot"></div>
+                <div class="bounce-dot"></div> -->
             </div>
         </div>
     </div>
@@ -76,6 +93,11 @@ const { state, Prequel } = PlayInfo();
 const initAiLoading = ref(true);
 const initAiLoadingText = ref('Final Phrase 思考中');
 const bodyDom: any = document.querySelector('.main-body ');
+
+let timer: any = null;
+const estimatedTime = 500 * 60 * 18;
+const addPercent = 100 / estimatedTime;
+const nowPercent = ref(0);
 
 let paragraph = Prequel;
 onMounted(() => {
@@ -139,7 +161,10 @@ onMounted(() => {
                         insertText(pDom);
                     } else {
                         bodyDom.scrollTo(0, bodyDom?.scrollHeight);
-                        setTimeout(showNextLine, $route.query.showScript ? 50 : 30); // 控制每行显示的时间间隔，单位为毫秒
+                        setTimeout(
+                            showNextLine,
+                            $route.query.showScript ? 50 : 30
+                        ); // 控制每行显示的时间间隔，单位为毫秒
                     }
                 } else {
                     container1 = null;
@@ -154,13 +179,49 @@ onMounted(() => {
                 initAiLoadingText.value = 'Final Phrase 剧本生成中';
                 setTimeout(() => {
                     initAiLoadingText.value = 'Final Phrase 开始生成剧本';
+                    timer = setInterval(() => {
+                        const loadingDom =
+                            document.querySelector('#loading-text');
+                        if (nowPercent.value <= 90) {
+                            nowPercent.value = nowPercent.value + addPercent;
+                        } else {
+                            clearInterval(timer);
+                            timer = null;
+                        }
+                        if (loadingDom) {
+                            loadingDom.style.background = `linear-gradient(90deg, #505050b0 ${nowPercent.value}%, transparent 0%), linear-gradient(-90deg, #ffffffb0 100%, transparent 0%)`;
+                        }
+                    }, 5);
                     // const realDom = document.querySelector('.select-content');
                     // realDom.innerHTML = ''
                     paragraph = state;
+                    if (!timer) {
+                        timer = setInterval(() => {
+                            const loadingDom =
+                                document.querySelector('#loading-text');
+                            if (nowPercent.value <= 90) {
+                                nowPercent.value =
+                                    nowPercent.value + addPercent;
+                            } else {
+                                clearInterval(timer);
+                                timer = null;
+                            }
+                            if (loadingDom) {
+                                loadingDom.style.background = `linear-gradient(90deg, #505050b0 ${nowPercent.value}%, transparent 0%), linear-gradient(-90deg, #ffffffb0 100%, transparent 0%)`;
+                            }
+                        }, 5);
+                    }
                     showNextItem(0);
                 }, 5000);
             } else {
-                showMenu.value = true;
+                nowPercent.value = 100;
+                setTimeout(() => {
+                    const loadingDom = document.querySelector('#loading-text');
+                    if (loadingDom) {
+                        loadingDom.style.background = 'none';
+                    }
+                    showMenu.value = true;
+                }, 300);
             }
         }
     }
@@ -254,6 +315,14 @@ const { title, content } = toRefs(state);
     color: #505050b0;
 }
 
+.loading-text {
+    background: linear-gradient(90deg, #505050b0 0%, transparent 0%),
+        linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    background-clip: text !important;
+    color: transparent !important;
+    // animation: textLoading 5s forwards alternate;
+}
+
 .loading-content .bounce-dot {
     width: 5px;
     height: 5px;
@@ -268,8 +337,38 @@ const { title, content } = toRefs(state);
     animation-delay: 0.25s; /* 让第二个点稍微迟于开始 */
 }
 
+.loading-point {
+    color: #505050b0 !important;
+}
 .bounce-dot:nth-child(3) {
     animation-delay: 0.5s; /* 让第三个点稍微迟于开始 */
+}
+@keyframes textLoading {
+    0% {
+        background: linear-gradient(90deg, #505050b0 0%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
+    5% {
+        background: linear-gradient(90deg, #505050b0 5%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
+    10% {
+        background: linear-gradient(90deg, #505050b0 10%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
+    12% {
+        background: linear-gradient(90deg, #505050b0 12%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
+    20% {
+        background: linear-gradient(90deg, #505050b0 20%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
+    99%,
+    100% {
+        background: linear-gradient(90deg, #505050b0 98%, transparent 0%),
+            linear-gradient(-90deg, #ffffffb0 100%, transparent 0%);
+    }
 }
 @keyframes bounce {
     0% {

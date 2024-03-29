@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-18 20:58:41
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-27 19:04:19
+ * @LastEditTime: 2024-03-29 15:49:44
  * @FilePath: /final-phrase-demo/src/App.vue
  * @Description: 
 -->
@@ -12,12 +12,14 @@
         <router-view />
     </div>
     <div class="main-background"></div>
+    <robot></robot>
 </template>
 
 <script lang="ts" setup>
 import { reactive, toRefs, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 const $route = useRoute();
+import robot from '@/components/bot/index.vue'
 import Header from '@/components/Header/index.vue';
 import useHeader from '@/components/Header/useHeader';
 watch(
