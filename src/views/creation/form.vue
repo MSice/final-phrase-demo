@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-28 16:13:16
+ * @LastEditTime: 2024-03-30 17:54:04
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -93,18 +93,12 @@
         <div class="btn-group">
             <el-button
                 type="primary"
-                link
-            >上一步</el-button>
-            <el-button
-                type="primary"
-                link
                 @click.stop="nextPath"
             >没有想法,直接生成</el-button>
             <el-button
                 type="primary"
-                link
                 @click="nextEndShow = true"
-            >下一步</el-button>
+            >填写完毕,请帮我生成剧本</el-button>
         </div>
         <transition name="next-end">
             <div
@@ -120,12 +114,11 @@
                 </div>
                 <div
                     class="creation-btn creation-btn-vip"
-                    @click.stop
+                    @click.stop="nextPath"
                 >
                     <img
                         src="./assets/VIP.png"
                         alt=""
-                        @click.stop="nextPath"
                     >
                     VIP生成全部
                     <div class="creation-btn-bc">即刻开通</div>
@@ -265,6 +258,9 @@ function nextPath() {
         justify-content: space-evenly;
         .el-button {
             font-size: 16px;
+            height: 100%;
+            width: 30%;
+            min-width: 150px;
         }
     }
 }

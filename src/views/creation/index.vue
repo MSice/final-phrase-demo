@@ -51,24 +51,39 @@
                     :key="item.type"
                     :initial-index="item.type"
                 >
-                    <div class="type-text">
-                        {{ item.name }}
-                    </div>
-                    <video
-                        :id="`video-${item.type}`"
-                        class="fill-background"
-                        :style="{
-                            height: domeHeight
+                    <div class="swiper-item-content">
+                        <div class="type-text">
+                            {{ item.name }}
+
+                        </div>
+                        <video
+                            :id="`video-${item.type}`"
+                            class="fill-background"
+                            :style="{
+                            height: `calc(${domeHeight} - 30px)`
                         }"
-                        muted
-                        playsinline
-                        controls
-                    >
-                        <source
-                            :src="item.src"
-                            type="video/mp4"
+                            muted
+                            playsinline
+                            controls
                         >
-                    </video>
+                            <source
+                                :src="item.src"
+                                type="video/mp4"
+                            >
+                        </video>
+                        <div
+                            class="type-text"
+                            style="margin-top: 15px;"
+                        >
+                            <el-button
+                                type="primary"
+                                :disabled="item.disablea"
+                                @click="startCreation(item.name)"
+                            >
+                                {{item.disablea ? '暂未开放' : '开始创作'}}
+                            </el-button>
+                        </div>
+                    </div>
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -132,6 +147,11 @@ const scriptTypeList = reactive([
     }
 ]);
 
+function startCreation(scriptType: any) {
+    creationFormParams.scriptType = scriptType;
+    nextPath();
+}
+
 function nextPath() {
     if (creationFormParams.scriptType) {
         creationFormParams.agruements = {};
@@ -194,7 +214,7 @@ onBeforeMount(() => {
     for (let i in scriptTypeList) {
         const item = scriptTypeList[i];
         if (item.name === creationFormParams.scriptType) {
-            swiperSelectValue.value = parseInt(i, 10)
+            swiperSelectValue.value = parseInt(i, 10);
         }
     }
 });
@@ -211,6 +231,28 @@ onMounted(() => {
         height: 100%;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+    }
+    .el-carousel {
+        padding-bottom: 70px;
+    }
+    .el-carousel__indicators--horizontal {
+        bottom: 70px;
+    }
+    .is-active {
+        overflow: unset;
+    }
+    .el-carousel__arrow {
+        top: calc(50% - 35px);
+    }
+    .swiper-item-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .el-carousel__mask {
+        background: none !important;
     }
 }
 </style>
@@ -261,6 +303,10 @@ onMounted(() => {
         }
         video {
             height: calc(100% - 30px);
+        }
+        .next-btn-swiper {
+            height: 50px;
+            padding-bottom: 15px;
         }
     }
 }

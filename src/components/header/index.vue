@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-19 17:18:01
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 12:47:18
+ * @LastEditTime: 2024-03-30 17:57:51
  * @FilePath: /final-phrase-demo/src/components/Header/index.vue
  * @Description: 
 -->
@@ -15,14 +15,35 @@
                 alt=""
                 srcset=""
             /> -->
-            <div v-show="isRegister" class="info">
+
+            <el-button
+                type="primary"
+                link
+                v-if="route.path === '/creation/form'"
+                @click="router.go(-1)"
+            >
+                <el-icon>
+                    <CaretLeft />
+                </el-icon> 返回上一步
+            </el-button>
+            <div
+                v-show="isRegister"
+                class="info"
+            >
                 <div class="info-line"></div>
                 <div class="info-text">账号注册</div>
             </div>
         </div>
-        <div class="header-right" v-show="!isRegister">
+        <div
+            class="header-right"
+            v-show="!isRegister"
+        >
             <span class="title">{{ userInfo.name }}</span>
-            <el-avatar shape="square" :size="40" :src="url" />
+            <el-avatar
+                shape="square"
+                :size="40"
+                :src="url"
+            />
         </div>
     </div>
 </template>
