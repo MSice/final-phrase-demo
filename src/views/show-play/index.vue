@@ -2,7 +2,7 @@
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi04
- * @LastEditTime: 2024-03-29 18:40:49
+ * @LastEditTime: 2024-03-30 16:01:46
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -66,6 +66,7 @@
             <div
                 v-if="!initAiLoading"
                 class="loading-point"
+                style="margin-left: 5px"
             >
                 {{ nowPercent.toFixed(2) }}%
                 <!-- <div class="bounce-dot"></div>
