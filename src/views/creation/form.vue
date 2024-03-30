@@ -1,7 +1,7 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-30 17:54:04
+ * @LastEditTime: 2024-03-30 18:00:55
  * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -157,6 +157,14 @@ function nextPath() {
         path: '/showPlay'
     });
 }
+
+onMounted(() => {
+    if (!creationFormParams.scriptType) {
+        router.replace({
+            path: '/creation'
+        });
+    }
+});
 </script>
 
 <style scoped>
