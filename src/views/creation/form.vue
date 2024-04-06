@@ -1,8 +1,8 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-03-30 18:00:55
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-04-06 16:30:31
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
 -->
@@ -25,7 +25,9 @@
                 </el-form-item>
                 <el-form-item label="细分类型">
                     <el-select
-                        v-model="creationFormParams.agruements.detailedScriptType"
+                        v-model="
+                            creationFormParams.agruements.detailedScriptType
+                        "
                         multiple
                         collapse-tags
                         placeholder="请选择细分类型(选填)"
@@ -35,12 +37,15 @@
                             :key="index"
                             :label="item"
                             :value="item"
-                            :disabled="!noneDisableDetailedScriptTypeList.includes(item)"
+                            :disabled="
+                                !noneDisableDetailedScriptTypeList.includes(
+                                    item
+                                )
+                            "
                         />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="历史时代">
-
                     <el-input
                         v-model="creationFormParams.agruements.historicalEra"
                         placeholder="请输入历史时代(选填)"
@@ -51,14 +56,22 @@
                 :model="creationFormParams"
                 :inline="true"
                 label-width="auto"
-                style="width: 100%;display: flex;justify-content: space-between;flex-wrap: wrap;"
+                style="
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                "
                 size="large"
             >
                 <el-form-item
                     label="主角性别"
-                    style="width: calc(50% - 15px); margin-right: 0;flex-shrink: 0;"
+                    style="
+                        width: calc(50% - 15px);
+                        margin-right: 0;
+                        flex-shrink: 0;
+                    "
                 >
-
                     <el-input
                         v-model="creationFormParams.agruements.historicalEra"
                         placeholder="请输入主角性别(选填)"
@@ -66,9 +79,12 @@
                 </el-form-item>
                 <el-form-item
                     label="主角年龄"
-                    style="width: calc(50% - 15px); margin-right: 0;flex-shrink: 0;"
+                    style="
+                        width: calc(50% - 15px);
+                        margin-right: 0;
+                        flex-shrink: 0;
+                    "
                 >
-
                     <el-input
                         v-model="creationFormParams.agruements.historicalEra"
                         placeholder="请输入主角年龄(选填)"
@@ -76,9 +92,13 @@
                 </el-form-item>
                 <el-form-item
                     label="剧情描述"
-                    style="width: 100%;margin-right: 0;heightflex-shrink: 0;margin-bottom: 0;"
+                    style="
+                        width: 100%;
+                        margin-right: 0;
+                        heightflex-shrink: 0;
+                        margin-bottom: 0;
+                    "
                 >
-
                     <el-input
                         v-model="creationFormParams.agruements.description"
                         maxlength="1500"
@@ -91,14 +111,12 @@
             </el-form>
         </div>
         <div class="btn-group">
-            <el-button
-                type="primary"
-                @click.stop="nextPath"
-            >没有想法,直接生成</el-button>
-            <el-button
-                type="primary"
-                @click="nextEndShow = true"
-            >填写完毕,请帮我生成剧本</el-button>
+            <el-button type="primary" @click.stop="nextPath"
+                >没有想法,直接生成</el-button
+            >
+            <el-button type="primary" @click="nextEndShow = true"
+                >填写完毕,请帮我生成剧本</el-button
+            >
         </div>
         <transition name="next-end">
             <div
@@ -106,20 +124,14 @@
                 class="creation-form-end"
                 @click="nextEndShow = false"
             >
-                <div
-                    class="creation-btn"
-                    @click.stop="nextPath"
-                >
+                <div class="creation-btn" @click.stop="nextPath">
                     免费生成6场
                 </div>
                 <div
                     class="creation-btn creation-btn-vip"
-                    @click.stop="nextPath"
+                    @click.stop="nextPath(1)"
                 >
-                    <img
-                        src="./assets/VIP.png"
-                        alt=""
-                    >
+                    <img src="./assets/VIP.png" alt="" />
                     VIP生成全部
                     <div class="creation-btn-bc">即刻开通</div>
                 </div>
@@ -152,9 +164,9 @@ const detailedScriptTypeList = reactive([
 ]);
 const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
 
-function nextPath() {
+function nextPath(type = 0) {
     router.push({
-        path: '/showPlay'
+        path: type === 1 ? '/vipPage' : '/showPlay'
     });
 }
 

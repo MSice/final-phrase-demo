@@ -1,8 +1,8 @@
 <!--
  * @Author: suqi04
  * @Date: 2024-03-29 15:41:44
- * @LastEditTime: 2024-03-30 16:16:46
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-04-06 17:38:43
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/components/bot/index.vue
  * @Description: 文件描述
 -->
@@ -27,21 +27,17 @@
                         <span
                             class="close-btn"
                             @click.stop="showRobotDialog = false"
-                        >×</span>
+                            >×</span
+                        >
                     </div>
-                    <div
-                        id="robot-dialog-content"
-                        class="robot-dialog-content"
-                    >
+                    <div id="robot-dialog-content" class="robot-dialog-content">
                         <div class="content-warp">
                             <div class="content-avatar">
-                                <img
-                                    src="./Animation-bot.png"
-                                    alt=""
-                                >
+                                <img src="./Animation-bot.png" alt="" />
                             </div>
                             <div class="dialogue-content">
-                                你好，我是Final Phrase 智能助理，我将根据您输入的问题，自动生成回答。
+                                你好，我是Final Phrase
+                                智能助理，我将根据您输入的问题，自动生成回答。
                             </div>
                         </div>
                     </div>
@@ -50,15 +46,13 @@
                             <el-icon>
                                 <Warning />
                             </el-icon>
-                            <span style="margin-left: 3px;">
-                                帮助
-                            </span>
+                            <span style="margin-left: 3px"> 帮助 </span>
                         </div>
                     </div>
                     <div class="robot-dialog-footer">
                         <el-input
                             v-model="inputText"
-                            style="width: 100%; height: 100%;"
+                            style="width: 100%; height: 100%"
                             type="textarea"
                             resize="none"
                             placeholder="请输入你的问题"
@@ -66,15 +60,9 @@
                         />
                     </div>
                 </div>
-
             </transition>
-            <img
-                src="./Animation-bot.gif"
-                alt=""
-                @click="showRobotDialog = !showRobotDialog"
-            >
+            <img src="./Animation-bot.gif" alt="" @click="clickHandle" />
         </div>
-
     </div>
 </template>
 
@@ -215,63 +203,47 @@ function mouseLeave() {
 }
 
 function dragStart(e: any) {
-    const bodyWidth = document.body.clientWidth;
-    const bodyHeight = document.body.clientHeight;
+    // const bodyWidth = document.body.clientWidth;
 
-    moveType.value = false;
-    if (showRobotDialog.value) {
-        switch (true) {
-            case e.x >= 440 && e.y >= 540:
-                nowClass.value = 'top-left';
-                break;
-            case e.x >= 440 && bodyHeight - e.y > 540:
-                nowClass.value = 'bottom-left';
-                break;
-            case e.x < 440 && e.y >= 540:
-                nowClass.value = 'top-right';
-                break;
-            case e.x < 440 && bodyHeight - e.y > 540:
-                nowClass.value = 'bottom-right';
-                break;
-            default:
-                nowClass.value = 'top-left';
-                setTimeout(() => {
-                    bottom.value = 60;
-                    right.value = 40;
-                }, 100);
-                break;
-        }
-    }
-
+    moveType.value = true;
     console.log(e.x, e.y);
-    setTimeout(() => {
-        document.addEventListener('mousemove', mouseMove);
-        document.addEventListener('mouseup', mouseUp);
-    });
+    document.addEventListener('mousemove', mouseMove);
+    document.addEventListener('mouseup', mouseUp);
 }
-function mouseMove(e: any) {
-    showRobotDialog.value = false;
-    let x = document.body.clientWidth - e.clientX;
-    let y = document.body.clientHeight - e.clientY;
 
-    if (x < 0) {
-        x = 0;
-        mouseUp(e);
-    } else if (x > document.body.clientWidth - 90) {
-        x = document.body.clientWidth - 90;
-    }
+function mouseMove(e: any) {
+    if (!moveType.value) return;
+    showRobotDialog.value = false;
+    let y = document.body.clientHeight - e.clientY;
+    const bodyHeight = document.body.clientHeight;
     if (y < 0) {
         y = 0;
-        mouseUp(e);
     } else if (y > document.body.clientHeight - 90) {
-        x = document.body.clientHeight - 90;
+        y = document.body.clientHeight - 90;
     }
-    right.value = x;
+
+    switch (true) {
+        case e.y >= 540:
+            nowClass.value = 'top-left';
+            break;
+        case bodyHeight - e.y > 540:
+            nowClass.value = 'bottom-left';
+            break;
+    }
+
+    // right.value = x;
     bottom.value = y;
 }
 function mouseUp(e: any) {
+    moveType.value = false;
     document.removeEventListener('mouseup', mouseUp);
     document.removeEventListener('mousemove', mouseMove);
+}
+
+function clickHandle() {
+    setTimeout(() => {
+        showRobotDialog.value = !showRobotDialog.value;
+    }, 100);
 }
 </script>
 

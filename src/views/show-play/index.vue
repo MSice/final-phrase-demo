@@ -1,8 +1,8 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-24 17:18:43
- * @LastEditors: suqi04
- * @LastEditTime: 2024-03-30 16:01:46
+ * @LastEditors: huangwensong
+ * @LastEditTime: 2024-04-06 17:54:19
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -25,40 +25,24 @@
                     "
                 ></Menu>
             </div>
-            <div
-                class="text-content"
-                :class="{ collapsed: isCollapsed }"
-            >
+            <div class="text-content" :class="{ collapsed: isCollapsed }">
                 <Title :initial-text="title"></Title>
-                <div class="select-content">
-                    <!-- <div
-                        v-for="item in content"
-                        :key="item.sessionTitle"
-                        :id="`content-item-${item.sessionId}`"
-                    >
-                        <h2 class="text-content-title">
-                            {{ item.sessionTitle }}
-                        </h2>
-                        <div v-html="item.text"></div>
-                    </div> -->
-                </div>
+                <div class="select-content"></div>
             </div>
         </div>
         <EditBtn v-show="showMenu"></EditBtn>
-        <div
-            v-if="!showMenu"
-            class="loading-content"
-        >
+        <div v-if="showMenu && isPreview" class="jj-btn" @click="drawer = true">
+            查看简介
+        </div>
+        <div v-if="!showMenu" class="loading-content">
             <span
+                v-if="!isPreview"
                 :class="initAiLoading ? '' : 'loading-text'"
                 id="loading-text"
             >
                 {{ initAiLoadingText }}
             </span>
-            <div
-                v-if="initAiLoading"
-                class="loading-point"
-            >
+            <div v-if="initAiLoading" class="loading-point">
                 <div class="bounce-dot"></div>
                 <div class="bounce-dot"></div>
                 <div class="bounce-dot"></div>
@@ -74,6 +58,9 @@
                 <div class="bounce-dot"></div> -->
             </div>
         </div>
+        <el-drawer v-model="drawer" :with-header="false">
+            <div v-html="jjInfo"></div>
+        </el-drawer>
     </div>
 </template>
 
@@ -87,9 +74,12 @@ import PlayInfo from '../../store/palyInfo';
 import { useRoute } from 'vue-router';
 const $route = useRoute();
 
+const drawer = ref(false);
 const isCollapsed = ref(true);
 const showMenu = ref(false);
 const activeItemId = ref(1);
+const isPreview = ref(false);
+const jjInfo = ref('');
 const { state, Prequel } = PlayInfo();
 const initAiLoading = ref(true);
 const initAiLoadingText = ref('Final Phrase 思考中');
@@ -101,7 +91,24 @@ const addPercent = 100 / estimatedTime;
 const nowPercent = ref(0);
 
 let paragraph = Prequel;
+
+function removeInputTags(htmlString: string) {
+    // 定义匹配<input>标签的正则表达式
+    var inputPattern = /<input[^>]*>/g;
+    // 使用replace()方法替换匹配到的<input>标签为空字符串
+    var result = htmlString.replace(inputPattern, '');
+    return result;
+}
+
 onMounted(() => {
+    // 获取query值
+    isPreview.value = $route?.query?.preview === '1' ? true : false;
+    $route?.query?.preview === '1' &&
+        paragraph.content.map(item => {
+            jjInfo.value += `<h3 class="text-content-title" style="margin:20px 0 10px 20px">${
+                item.sessionTitle
+            }</h3>${removeInputTags(item.text)}`;
+        });
     function showNextItem(index: number) {
         if ($route.path !== '/showPlay') {
             return;
@@ -280,6 +287,29 @@ onBeforeUnmount(() => {
 const { title, content } = toRefs(state);
 </script>
 <style lang="less" scoped>
+.jj-btn {
+    position: fixed;
+    right: 10px;
+    top: 130px;
+    display: flex;
+    font-size: 14px;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #b1c6a7;
+    padding: 15px;
+    cursor: pointer;
+    border: 1px solid #fff;
+    border-radius: 20px;
+    margin-right: 10px;
+    color: rgb(95, 94, 92);
+    &:hover {
+        background-color: #e9f1e9;
+        color: rgb(174, 172, 167);
+    }
+}
 .content {
     display: flex;
     .menu {

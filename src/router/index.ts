@@ -1,6 +1,6 @@
 /*
- * @LastEditTime: 2024-03-27 19:05:05
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-04-06 16:28:07
+ * @LastEditors: huangwensong
  * @FilePath: /final-phrase-demo/src/router/index.ts
  * @Description: 文件描述
  */
@@ -19,6 +19,7 @@ import CreationForm from '@/views/creation/form.vue'
 import ShowPlay from '@/views/show-play/index.vue'
 import EditPlay from '@/views/edit-play/index.vue'
 import Introduction from '@/views/introduction/index.vue'
+import VipPage from '@/views/vipPage/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -79,6 +80,14 @@ const routes: Array<RouteRecordRaw> = [
             needLogin: true
         },
         component: EditPlay
+    },
+    {
+        path: '/vipPage',
+        name: 'VipPage',
+        meta: {
+            needLogin: true
+        },
+        component: VipPage
     }
 ]
 

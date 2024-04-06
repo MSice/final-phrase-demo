@@ -1,8 +1,8 @@
 <!--
  * @Author: huangwensong
  * @Date: 2024-03-24 19:36:36
- * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 19:21:54
+ * @LastEditors: huangwensong
+ * @LastEditTime: 2024-04-06 15:37:30
  * @FilePath: /final-phrase-demo/src/components/title.vue
  * @Description: 
 -->
@@ -31,22 +31,14 @@
             >
                 上一场
             </el-button>
-            <el-button
-                type="primary"
-                @click="saveInfo"
-            >
-                预览
-            </el-button>
-            <el-button
-                type="primary"
-                @click="saveInfo"
-            >
-                保存
-            </el-button>
+            <el-button type="primary" @click="saveInfo(1)"> 预览 </el-button>
+            <el-button type="primary" @click="saveInfo"> 保存 </el-button>
             <el-button
                 v-if="$route.query.type && $route.query.type === '2'"
                 type="primary"
-                :disabled="parseInt($route.query.index || 0, 10) >= content.length - 1"
+                :disabled="
+                    parseInt($route.query.index || 0, 10) >= content.length - 1
+                "
                 @click="nextHandle"
             >
                 下一场
@@ -59,7 +51,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits, watch, toRefs, onBeforeMount } from 'vue';
+import {
+    ref,
+    defineProps,
+    defineEmits,
+    watch,
+    toRefs,
+    onBeforeMount
+} from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import PlayInfo from '@/store/palyInfo';
 const { state } = PlayInfo();
@@ -143,15 +142,17 @@ const nextHandle = () => {
         });
     }
 };
-const saveInfo = () => {
+const saveInfo = (type = 0) => {
     setTimeout(() => {
         router.push({
             path: '/showPlay',
             query: {
-                showScript: 'read'
+                showScript: 'read',
+                preview: type
             }
         });
-    }, 100);}
+    }, 100);
+};
 // Emit an event when the editing mode changes
 // const emitEditModeChange = () => {
 //     emit('edit-mode-change', editing.value);
@@ -163,7 +164,7 @@ const emitTextSaved = () => {
 };
 onBeforeMount(() => {
     console.log($route.query.index);
-    
+
     index.value = parseInt($route.query.index || 2, 10);
 });
 </script>
