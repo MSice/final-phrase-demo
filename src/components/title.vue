@@ -1,8 +1,8 @@
 <!--
- * @Author: huangwensong
+ * @Author: 777
  * @Date: 2024-03-24 19:36:36
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-04-06 15:37:30
+ * @LastEditors: 777
+ * @LastEditTime: 2024-04-15 19:11:38
  * @FilePath: /final-phrase-demo/src/components/title.vue
  * @Description: 
 -->
@@ -22,7 +22,10 @@
             <div>{{ originalText }}</div>
         </div>
 
-        <div v-if="$route.path === '/editPlay'" class="control">
+        <div
+            v-if="$route.path === '/editPlay'"
+            class="control"
+        >
             <el-button
                 v-if="$route.query.type && $route.query.type === '2'"
                 type="primary"
@@ -31,8 +34,18 @@
             >
                 上一场
             </el-button>
-            <el-button type="primary" @click="saveInfo(1)"> 预览 </el-button>
-            <el-button type="primary" @click="saveInfo"> 保存 </el-button>
+            <el-button
+                type="primary"
+                @click="drawer = true"
+            > 概述 </el-button>
+            <el-button
+                type="primary"
+                @click="saveInfo(1)"
+            > 预览 </el-button>
+            <el-button
+                type="primary"
+                @click="saveInfo"
+            > 保存 </el-button>
             <el-button
                 v-if="$route.query.type && $route.query.type === '2'"
                 type="primary"
@@ -47,6 +60,12 @@
         <!-- <el-button type="text" @click="toggleEdit">{{
             editing ? '保存' : '编辑'
         }}</el-button> -->
+        <el-drawer
+            v-model="drawer"
+            :with-header="false"
+        >
+            <span v-html="jjInfo" :contenteditable="false"></span>
+        </el-drawer>
     </div>
 </template>
 
@@ -61,7 +80,7 @@ import {
 } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import PlayInfo from '@/store/palyInfo';
-const { state } = PlayInfo();
+const { state, Prequel } = PlayInfo();
 
 const { content }: any = toRefs(state);
 
@@ -69,6 +88,22 @@ const router = useRouter();
 const $route = useRoute();
 const index = ref(0);
 
+const jjInfo = ref('');
+const drawer = ref(false);
+
+Prequel.content.forEach(item => {
+    jjInfo.value += `<h3 class="text-content-title" style="margin:20px 0 10px 20px">${
+        item.sessionTitle
+    }</h3>${removeInputTags(item.text)}`;
+});
+
+function removeInputTags(htmlString: string) {
+    // 定义匹配<input>标签的正则表达式
+    var inputPattern = /<input[^>]*>/g;
+    // 使用replace()方法替换匹配到的<input>标签为空字符串
+    var result = htmlString.replace(inputPattern, '');
+    return result;
+}
 watch(
     $route,
     val => {
@@ -168,6 +203,18 @@ onBeforeMount(() => {
     index.value = parseInt($route.query.index || 2, 10);
 });
 </script>
+<style>
+.el-drawer {
+    min-width: 700px!important;
+}
+.el-drawer h3 {
+    text-align: left;
+    font-size: 20px;
+}
+.el-drawer .ql-editor {
+    height: auto;
+}
+</style>
 <style lang="less" scoped>
 .edit-title {
     display: flex;

@@ -1,8 +1,8 @@
 <!--
- * @Author: huangwensong
+ * @Author: 777
  * @Date: 2024-03-25 19:43:23
- * @LastEditors: suqi04
- * @LastEditTime: 2024-03-28 19:26:54
+ * @LastEditors: 777
+ * @LastEditTime: 2024-04-14 22:06:48
  * @FilePath: /final-phrase-demo/src/views/edit-play/AllContent.vue
  * @Description: 
 -->
@@ -43,14 +43,14 @@ nowTitle.value = title.value;
 const text = ref('');
 
 onMounted(() => {
-    console.log(content.value);
+    // console.log(content.value);
     content.value.map((item: any) => {
         text.value += `<h3>${item.sessionTitle}</h3>${textHandle(item.text)}`;
     });
 });
 
 const saveInfo = (text: any) => {
-    console.log((text));
+    // console.log((text));
     
     // 使用正则表达式分割字符串
     const htmlString = textHandle(text);

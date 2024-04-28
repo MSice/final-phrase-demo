@@ -1,8 +1,8 @@
 <!--
- * @Author: huangwensong
+ * @Author: 777
  * @Date: 2024-03-24 17:18:43
- * @LastEditors: huangwensong
- * @LastEditTime: 2024-04-06 17:54:19
+ * @LastEditors: 777
+ * @LastEditTime: 2024-04-15 09:30:24
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -58,7 +58,7 @@
                 <div class="bounce-dot"></div> -->
             </div>
         </div>
-        <el-drawer v-model="drawer" :with-header="false">
+        <el-drawer v-model="drawer" :with-header="false" style="width: 700px">
             <div v-html="jjInfo"></div>
         </el-drawer>
     </div>
@@ -286,6 +286,19 @@ onBeforeUnmount(() => {
 });
 const { title, content } = toRefs(state);
 </script>
+<style>
+
+.el-drawer {
+    min-width: 700px!important;
+}
+.el-drawer h3 {
+    text-align: left;
+    font-size: 20px;
+}
+.el-drawer .ql-editor {
+    height: auto;
+}
+</style>
 <style lang="less" scoped>
 .jj-btn {
     position: fixed;

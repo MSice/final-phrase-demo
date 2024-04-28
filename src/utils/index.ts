@@ -1,7 +1,7 @@
 /*
- * @Author: huangwensong
+ * @Author: 777
  * @Date: 2024-03-25 21:08:30
- * @LastEditors: suqi04
+ * @LastEditors: 777
  * @LastEditTime: 2024-03-28 19:42:34
  * @FilePath: /final-phrase-demo/src/utils/index.ts
  * @Description:

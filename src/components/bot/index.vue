@@ -1,8 +1,8 @@
 <!--
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2024-03-29 15:41:44
- * @LastEditTime: 2024-04-06 17:38:43
- * @LastEditors: huangwensong
+ * @LastEditTime: 2024-04-28 09:31:16
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/src/components/bot/index.vue
  * @Description: 文件描述
 -->
@@ -27,19 +27,53 @@
                         <span
                             class="close-btn"
                             @click.stop="showRobotDialog = false"
-                            >×</span
-                        >
+                        >×</span>
                     </div>
-                    <div id="robot-dialog-content" class="robot-dialog-content">
+                    <div
+                        ref="robotDialogContent"
+                        id="robot-dialog-content"
+                        class="robot-dialog-content"
+                    >
                         <div class="content-warp">
                             <div class="content-avatar">
-                                <img src="./Animation-bot.png" alt="" />
+                                <img
+                                    src="./Animation-bot.png"
+                                    alt=""
+                                />
                             </div>
                             <div class="dialogue-content">
                                 你好，我是Final Phrase
                                 智能助理，我将根据您输入的问题，自动生成回答。
                             </div>
                         </div>
+                        <template
+                            v-for="(item, index) in localStorageHistoryList"
+                            :key="index"
+                        >
+                            <div class="content-warp content-reverse-warp">
+                                <div class="dialogue-content">
+                                    {{ item.question }}
+                                </div>
+                                <div class="content-avatar">
+                                    <img
+                                        :src="userImageUrl"
+                                        alt=""
+                                    >
+                                </div>
+                            </div>
+                            <div class="content-warp">
+                                <div class="content-avatar">
+                                    <img
+                                        src="./Animation-bot.png"
+                                        alt=""
+                                    >
+                                </div>
+                                <div class="dialogue-content">
+                                    {{ item.aiAnswer }}
+                                </div>
+                            </div>
+                        </template>
+                        <div id="scroll-to-bottom"></div>
                     </div>
                     <div class="robot-dialog-buble">
                         <div class="buble-btn buble-help">
@@ -61,23 +95,34 @@
                     </div>
                 </div>
             </transition>
-            <img src="./Animation-bot.gif" alt="" @click="clickHandle" />
+            <img
+                src="./Animation-bot.gif"
+                alt=""
+                @click="clickHandle"
+            />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onBeforeMount } from 'vue';
 import { ElMessage } from 'element-plus';
 const userImageUrl = require('./userImg.png');
 const move = ref(false);
+const longClickTimer = ref();
 const bottom = ref(60);
 const right = ref(40);
 const appDom = document.querySelector('#app');
 
 const inputText = ref('');
 const aiAnswer = ref('');
-const sendAble = ref(true);
+const sendAble = ref();
+let historyList = reactive([]);
+let localStorageHistoryList = reactive([]);
+const nowDia = reactive({
+    question: '',
+    aiAnswer: ''
+});
 function aiAnswerList(val: any) {
     switch (true) {
         case val.includes('你好'):
@@ -163,6 +208,7 @@ function sendQuestion() {
         return;
     }
     sendAble.value = false;
+    nowDia.question = inputText.value;
     const contentDom = document.querySelector('#robot-dialog-content');
     const inputValueCopy = inputText.value;
     if (contentDom) {
@@ -182,6 +228,10 @@ function sendQuestion() {
         if (aiContentDom) {
             aiContentDom.innerHTML = aiAnswerList(inputValueCopy);
             sendAble.value = true;
+            nowDia.aiAnswer = aiAnswerList(inputValueCopy);
+            historyList.push(JSON.stringify(nowDia));
+            localStorage.setItem('HISTORY_LIST', historyList.join('「,」'));
+
             setTimeout(() => {
                 aiContentDom.scrollIntoView();
             });
@@ -190,6 +240,19 @@ function sendQuestion() {
     }, 2000);
 }
 
+function initHistory() {
+    try {
+        const localStorageHistoryValue = localStorage
+            .getItem('HISTORY_LIST')
+            ?.split('「,」');
+        localStorageHistoryList = localStorageHistoryValue.map(item => {
+            return JSON.parse(item);
+        });
+        historyList = JSON.parse(JSON.stringify(localStorageHistoryValue));
+    } catch (e) {
+        localStorageHistoryList = [];
+    }
+}
 const showRobotDialog = ref(false);
 const moveType = ref(false);
 const robotDiaBox = reactive({
@@ -204,37 +267,56 @@ function mouseLeave() {
 
 function dragStart(e: any) {
     // const bodyWidth = document.body.clientWidth;
-
-    moveType.value = true;
-    console.log(e.x, e.y);
-    document.addEventListener('mousemove', mouseMove);
-    document.addEventListener('mouseup', mouseUp);
+    longClickTimer.value = setTimeout(() => {
+        moveType.value = true;
+        document.addEventListener('mousemove', mouseMove);
+        document.addEventListener('mouseup', mouseUp);
+    }, 1000);
 }
 
 function mouseMove(e: any) {
     if (!moveType.value) return;
     showRobotDialog.value = false;
-    let y = document.body.clientHeight - e.clientY;
     const bodyHeight = document.body.clientHeight;
+    const bodyWidth = document.body.clientWidth;
+    let y = bodyHeight - e.clientY;
+    let x = bodyWidth - e.clientX;
     if (y < 0) {
         y = 0;
     } else if (y > document.body.clientHeight - 90) {
         y = document.body.clientHeight - 90;
     }
 
+    if (x < 0) {
+        x = 0;
+    } else if (x > bodyWidth) {
+        x = bodyWidth - 40;
+    }
+    let yClass = 'top';
+    let xClass = 'left';
     switch (true) {
         case e.y >= 540:
-            nowClass.value = 'top-left';
+            yClass = 'top';
             break;
         case bodyHeight - e.y > 540:
-            nowClass.value = 'bottom-left';
+            yClass = 'bottom';
+            break;
+    }
+    switch (true) {
+        case e.x >= 500:
+            xClass = 'left';
+            break;
+        case bodyWidth - e.x > 500:
+            xClass = 'right';
             break;
     }
 
-    // right.value = x;
+    nowClass.value = `${yClass}-${xClass}`;
+    right.value = x;
     bottom.value = y;
 }
 function mouseUp(e: any) {
+    clearTimeout(longClickTimer.value);
     moveType.value = false;
     document.removeEventListener('mouseup', mouseUp);
     document.removeEventListener('mousemove', mouseMove);
@@ -243,8 +325,14 @@ function mouseUp(e: any) {
 function clickHandle() {
     setTimeout(() => {
         showRobotDialog.value = !showRobotDialog.value;
+        setTimeout(() => {
+            document.querySelector('#scroll-to-bottom')?.scrollIntoView();
+        });
     }, 100);
 }
+onBeforeMount(() => {
+    initHistory();
+});
 </script>
 
 <style>

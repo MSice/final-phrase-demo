@@ -1,8 +1,8 @@
 /*
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2021-07-23 18:27:20
  * @LastEditTime: 2024-03-24 14:06:23
- * @LastEditors: suqi04
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/vue.config.js
  */
 'use strict';

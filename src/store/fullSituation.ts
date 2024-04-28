@@ -1,8 +1,8 @@
 /*
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2024-03-24 16:37:46
  * @LastEditTime: 2024-03-24 21:46:14
- * @LastEditors: suqi04
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/src/store/fullSituation.ts
  * @Description: 全局配置
  */

@@ -1,8 +1,8 @@
 /*
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2021-08-06 09:14:11
  * @LastEditTime: 2024-03-24 19:22:41
- * @LastEditors: huangwensong
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/mock/web.js
  * @Description:
  */
@@ -15,7 +15,7 @@ module.exports = [
         enable: true,
         url: '/web/username',
         method: 'GET',
-        result: (req, res) => res.send('suqi04')
+        result: (req, res) => res.send('777')
     },
     {
         enable: true,

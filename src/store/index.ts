@@ -1,8 +1,8 @@
 /*
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2024-03-24 13:48:00
  * @LastEditTime: 2024-03-24 16:50:19
- * @LastEditors: suqi04
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/src/store/index.ts
  * @Description: Store 封装
  */

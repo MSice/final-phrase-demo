@@ -1,8 +1,8 @@
 /*
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2024-03-16 18:25:55
  * @LastEditTime: 2024-03-25 14:38:17
- * @LastEditors: huangwensong
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/src/main.ts
  * @Description: 文件描述
  */

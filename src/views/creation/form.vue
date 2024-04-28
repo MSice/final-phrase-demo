@@ -1,8 +1,8 @@
 <!--
- * @Author: suqi04
+ * @Author: 777
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-04-06 16:30:31
- * @LastEditors: huangwensong
+ * @LastEditTime: 2024-04-14 20:57:28
+ * @LastEditors: 777
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
 -->
@@ -129,7 +129,7 @@
                 </div>
                 <div
                     class="creation-btn creation-btn-vip"
-                    @click.stop="nextPath(1)"
+                    @click.stop
                 >
                     <img src="./assets/VIP.png" alt="" />
                     VIP生成全部
@@ -188,6 +188,10 @@ onMounted(() => {
     background-color: #000000bf !important;
     border: 2px solid #ffc300 !important;
     color: #e8c656 !important;
+    cursor: not-allowed;
+}
+.creation-form-end .creation-btn-vip:hover {
+    background-color: #797979bf !important;
 }
 .creation-form-end .creation-btn-vip img {
     position: absolute;

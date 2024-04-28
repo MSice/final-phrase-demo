@@ -1,7 +1,7 @@
 /*
- * @Author: huangwensong
+ * @Author: 777
  * @Date: 2024-03-19 19:43:23
- * @LastEditors: huangwensong
+ * @LastEditors: 777
  * @LastEditTime: 2024-03-19 19:46:49
  * @FilePath: /final-phrase-demo/src/utils/auth.ts
  * @Description:
