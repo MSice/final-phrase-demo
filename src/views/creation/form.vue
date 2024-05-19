@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-04-14 20:57:28
- * @LastEditors: 777
+ * @LastEditTime: 2024-05-19 10:41:38
+ * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
 -->
@@ -73,7 +73,7 @@
                     "
                 >
                     <el-input
-                        v-model="creationFormParams.agruements.historicalEra"
+                        v-model="creationFormParams.agruements.historicalSex"
                         placeholder="请输入主角性别(选填)"
                     />
                 </el-form-item>
@@ -86,7 +86,7 @@
                     "
                 >
                     <el-input
-                        v-model="creationFormParams.agruements.historicalEra"
+                        v-model="creationFormParams.agruements.historicalAge"
                         placeholder="请输入主角年龄(选填)"
                     />
                 </el-form-item>

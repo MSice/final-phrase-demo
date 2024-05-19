@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-29 15:41:44
- * @LastEditTime: 2024-04-28 09:31:16
- * @LastEditors: 777
+ * @LastEditTime: 2024-05-19 10:43:07
+ * @LastEditors: suqi04
  * @FilePath: /final-phrase-demo/src/components/bot/index.vue
  * @Description: 文件描述
 -->
@@ -268,7 +268,7 @@ function mouseLeave() {
 function dragStart(e: any) {
     // const bodyWidth = document.body.clientWidth;
     longClickTimer.value = setTimeout(() => {
-        moveType.value = true;
+        // moveType.value = true;
         document.addEventListener('mousemove', mouseMove);
         document.addEventListener('mouseup', mouseUp);
     }, 1000);
