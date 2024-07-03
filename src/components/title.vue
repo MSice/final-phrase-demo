@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-24 19:36:36
- * @LastEditors: 777
- * @LastEditTime: 2024-04-15 19:11:38
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-07-03 21:22:29
  * @FilePath: /final-phrase-demo/src/components/title.vue
  * @Description: 
 -->
@@ -86,7 +86,7 @@ const { content }: any = toRefs(state);
 
 const router = useRouter();
 const $route = useRoute();
-const index = ref(0);
+const index = ref($route.query.index || 0);
 
 const jjInfo = ref('');
 const drawer = ref(false);
@@ -172,7 +172,7 @@ const nextHandle = () => {
         router.push({
             query: {
                 type: 2,
-                index: index.value + 1
+                index: (index.value || 0) + 1
             }
         });
     }

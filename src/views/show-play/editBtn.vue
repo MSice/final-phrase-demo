@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-25 16:26:33
- * @LastEditors: 777
- * @LastEditTime: 2024-04-06 15:55:01
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-07-03 21:23:33
  * @FilePath: /final-phrase-demo/src/views/show-play/editBtn.vue
  * @Description: 
 -->
@@ -47,10 +47,16 @@ async function downLoadAll() {
     }
 }
 const goPage = (type: number) => {
+    let query = {
+        type
+    }
+    if (type === 2) {
+        query.index = 0
+    }
     router.push({
         path: '/editPlay',
         query: {
-            type
+            ...query
         }
     });
 };
