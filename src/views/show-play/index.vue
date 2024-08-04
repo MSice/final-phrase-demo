@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-24 17:18:43
- * @LastEditors: 777
- * @LastEditTime: 2024-04-15 09:30:24
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-08-04 21:48:40
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -14,7 +14,7 @@
                 <Menu
                     :key="activeItemId"
                     v-show="showMenu"
-                    :menuItems="content"
+                    :menuItems="menuList"
                     :activeItemId="activeItemId"
                     @select="scrollToElement"
                     :isCollapsed="isCollapsed"
@@ -26,7 +26,7 @@
                 ></Menu>
             </div>
             <div class="text-content" :class="{ collapsed: isCollapsed }">
-                <Title :initial-text="title"></Title>
+                <Title :initial-text="mainScript.title"></Title>
                 <div class="select-content"></div>
             </div>
         </div>
@@ -66,6 +66,15 @@
 
 <script lang="ts" setup>
 import { ref, reactive, toRefs, onMounted, onBeforeUnmount } from 'vue';
+import {
+    createOutline,
+    create_main,
+    create_role,
+    create_storyline,
+    get_script_list,
+    create_script
+} from '@/api';
+import { ChOrder } from '@/utils';
 import Title from '@/components/title.vue';
 import Menu from './menu.vue';
 import EditBtn from './editBtn.vue';
@@ -77,18 +86,26 @@ const $route = useRoute();
 const drawer = ref(false);
 const isCollapsed = ref(true);
 const showMenu = ref(false);
-const activeItemId = ref(1);
+const activeItemId = ref('');
 const isPreview = ref(false);
 const jjInfo = ref('');
-const { state, Prequel } = PlayInfo();
+const { state, Prequel, menuList } = PlayInfo();
 const initAiLoading = ref(true);
 const initAiLoadingText = ref('Final Phrase 思考中');
 const bodyDom: any = document.querySelector('.main-body ');
 
+const loadPercentage = ref(100.0);
+
 let timer: any = null;
-const estimatedTime = 500 * 60 * 18;
-const addPercent = 100 / estimatedTime;
+const estimatedTime = ref(500 * 60 * 18);
+let addPercent = 100 / estimatedTime.value;
 const nowPercent = ref(0);
+const isShowScript = $route.query.showScript;
+// const { title, content } = toRefs(state);
+const mainScript = toRefs(state);
+const PrequelObj = toRefs(Prequel);
+
+let loadingDom: any = null;
 
 let paragraph = Prequel;
 
@@ -100,8 +117,487 @@ function removeInputTags(htmlString: string) {
     return result;
 }
 
-onMounted(() => {
+let realDom = {};
+// const realDomObserver = reactive
+
+const observerConfig = { childList: true, subtree: true, characterData: true };
+// 导航处理
+let scrollTimer: any = null;
+function onScroll() {
+    if (!showMenu.value) {
+        return;
+    }
+    if (scrollTimer) {
+        clearTimeout(scrollTimer);
+    }
+    scrollTimer = setTimeout(() => {
+        for (let i of menuList.value) {
+            if ($route.path !== '/showPlay') {
+                return;
+            }
+            const targetElement: any = document.getElementById(i.id);
+            // 获取目标元素的位置信息
+
+            let elementRect: any = targetElement?.getBoundingClientRect();
+            if (
+                elementRect?.top >= 0 ||
+                (elementRect?.bottom <= window.innerHeight &&
+                    elementRect?.bottom > 0)
+            ) {
+                // 当元素进入视口时，触发提示
+
+                activeItemId.value = i.id;
+                break;
+            }
+        }
+    }, 200);
+}
+
+// 打字机效果实现
+async function Typewriter(
+    lineData: any,
+    typeTitle: any,
+    id: any,
+    type: any,
+    cb: any
+) {
+    let realDomObserver = null;
+    if (realDom) {
+        realDomObserver = new MutationObserver(dom => {
+            bodyDom.scrollTop = bodyDom.scrollHeight;
+        });
+        realDomObserver.observe(realDom, observerConfig);
+    } else {
+        return;
+    }
+    // 创建富文本虚拟dom & 设置属性
+    let mockDiv = document.createElement('div');
+    mockDiv.innerHTML = lineData.join('');
+    let onceAdd = 0.1;
+    try {
+        onceAdd =
+            Math.floor(
+                (loadPercentage.value * 100) / mockDiv.innerText.length
+            ) / 100;
+    } catch (e) {
+        onceAdd =
+            loadPercentage.value > 0.1
+                ? loadPercentage.value - 0.1
+                : loadPercentage.value;
+    }
+    // console.log(onceAdd, '----');
+
+    let addMax = 0;
+    // 获取文本中的所有行
+    const lineList = mockDiv.querySelectorAll('p');
+    realDom.innerHTML += `<h3 id="${type}-${id}-h3" class="text-content-title" style="margin:10px 0 10px">${typeTitle}</h3>`;
+    // 创建富文本虚拟dom & 设置属性
+    mockDiv = document.createElement('div');
+    mockDiv.id = `${type}-${id}`;
+    mockDiv.className = 'ql-editor';
+    mockDiv.setAttribute('data-gramm', 'false');
+    mockDiv.contentEditable = 'false';
+    realDom?.appendChild(mockDiv);
+
+    menuList.value.push({
+        label: typeTitle,
+        id: mockDiv.id,
+        menuType: type
+    });
+    // 创建阶段标题
+    // const titleH3 = document.createElement('h3');
+    // titleH3.innerHTML = `<h3 class="text-content-title" style="margin:20px 0 10px 20px">${typeTitle}</h3>`;
+
+    if (lineList.length > 0) {
+        // 实现打字机效果
+        // console.log(lineList.length, lineList);
+
+        for (let index = 0; index < lineList.length; index++) {
+            let pLine = lineList[index];
+            const pCloneDom = pLine?.cloneNode(true);
+
+            const pCloneText = pCloneDom.innerHTML.split('');
+
+            // 如果不是预览效果，按字符输出
+            if (!isShowScript) {
+                pCloneDom.innerHTML = '';
+            }
+            mockDiv.appendChild(pCloneDom);
+
+            if (!isShowScript) {
+                let inTag = false;
+                let currentText = '';
+                let tagBuffer = '';
+                for (let char of pCloneText) {
+                    // for (let childIndex = 0)
+                    await new Promise(reslove => {
+                        setTimeout(() => {
+                            if (char === '<') {
+                                inTag = true;
+                                tagBuffer = '<';
+                            } else if (inTag) {
+                                tagBuffer += char;
+                                if (char === '>') {
+                                    inTag = false;
+                                    currentText += tagBuffer;
+                                    tagBuffer = '';
+                                }
+                            } else {
+                                currentText += char;
+                            }
+                            pCloneDom.innerHTML = currentText;
+                            if (onceAdd + addMax < loadPercentage.value - 0.1) {
+                                nowPercent.value += onceAdd;
+                                addMax += onceAdd;
+                            }
+                            if (loadingDom && type === "script") {
+                                loadingDom.style.background = `linear-gradient(90deg, #505050b0 ${
+                                    nowPercent.value 
+                                }%, transparent 0%), linear-gradient(-90deg, #ffffffb0 100%, transparent 0%)`;
+                            }
+                            reslove('');
+                        }, 5);
+                    });
+                }
+            }
+            // 行与行之间实现间隔等待
+
+            await new Promise(reslove => {
+                setTimeout(() => {
+                    reslove('');
+                }, 100);
+            });
+        }
+        nowPercent.value = loadPercentage.value * (parseInt(id, 10) + 1);
+        // console.log(loadPercentage.value, id);
+    }
+
+    if (realDomObserver) {
+        realDomObserver.disconnect();
+    }
+    switch (type) {
+        case 'synopsis':
+            // Prequel.content.push({
+            //     sessionId: mockDiv.id,
+            //     sessionTitle: typeTitle,
+            //     text: mockDiv.outerHTML
+            // });
+            PrequelObj.content.value.push({
+                sessionId: mockDiv.id,
+                sessionTitle: typeTitle,
+                text: mockDiv.outerHTML
+            });
+            break;
+        default:
+            // state.content.push({
+            //     sessionId: mockDiv.id,
+            //     sessionTitle: typeTitle,
+            //     text: mockDiv.outerHTML
+            // });
+            mainScript.content.value.push({
+                sessionId: mockDiv.id,
+                sessionTitle: typeTitle,
+                text: mockDiv.outerHTML
+            });
+            
+    }
+    cb('');
+}
+
+// 生成剧本文本
+function reloadMainScriptApiReload() {
+    nowPercent.value = 0;
+    initAiLoading.value = false;
+    initAiLoadingText.value = 'Final Phrase 剧本生成中';
+    realDom.innerHTML += `<h2 id="script-info-h3" class="text-content-title" style="margin:10px 0 10px">剧本内容</h2>`;
+    activeItemId.value = 'script-info';
+    menuList.value.push({
+        label: '剧本内容',
+        id: 'script-info',
+        menuType: 'script'
+    });
+    new Promise(reslove => {
+        get_script_list().then(async (data: any) => {
+            if (data && data.code === 0) {
+                data = data.data;
+                if (data?.length > 0) {
+                    loadPercentage.value =
+                        Math.floor((100 * 100) / data?.length) / 100;
+                    for (
+                        let script_index = 0;
+                        script_index < data.length;
+                        script_index++
+                    ) {
+                        let script = data[script_index];
+                        await new Promise(_reslove => {
+                            create_script({
+                                script_name: script
+                            })
+                                .then((_data: any) => {
+                                    if (
+                                        _data &&
+                                        _data.success &&
+                                        _data.content
+                                    ) {
+                                        _data = JSON.parse(
+                                            _data.content
+                                                .replace(/\\n/g, '')
+                                                .replace(/\n/g, '')
+                                        );
+                                        // 筛选内容前面的key
+                                        let formatData = Object.keys(_data)
+                                            .filter(
+                                                key =>
+                                                    ![
+                                                        '元素',
+                                                        '剧本内容',
+                                                        '场次'
+                                                    ].includes(key)
+                                            )
+                                            .map(key => {
+                                                let _line = _data[key];
+                                                return `<p><b>${key}:</b> ${_data[key]}</p>`;
+                                            });
+                                        // 整理元素
+                                        let elementList = [];
+                                        if (_data['元素']) {
+                                            elementList = [
+                                                `<p><b>元素:</b></p>`,
+                                                ..._data['元素'].map(
+                                                    (
+                                                        el: any,
+                                                        index: number
+                                                    ) => {
+                                                        // `<p><b>元素${ChOrder(index + 1)}</b></p>` +
+                                                        return (
+                                                            Object.keys(el)
+                                                                .map(_key => {
+                                                                    return `<p><em>${_key}: </em> ${el[_key]}</p>`;
+                                                                })
+                                                                .join('') +
+                                                            `<p><br></p>`
+                                                        );
+                                                    }
+                                                )
+                                            ];
+                                        }
+                                        formatData = [
+                                            ...formatData,
+                                            ...elementList,
+                                            `<p><b>剧本内容: </b></p><p>${_data['剧本内容']}</p>`
+                                        ];
+
+                                        Typewriter(
+                                            formatData,
+                                            script,
+                                            script_index,
+                                            'script',
+                                            _reslove
+                                        );
+                                    } else {
+                                        _reslove();
+                                    }
+                                })
+                                .catch(err => {
+                                    _reslove();
+                                });
+                        });
+                    }
+                    bodyDom.scrollTo(0, 0);
+                    reslove();
+                }
+            }
+        });
+    }).finally(() => {
+        nowPercent.value = 100;
+        localStorage.setItem('MainScript_history', JSON.stringify(state));
+        showMenu.value = true;
+    });
+}
+
+// 生成剧本简介
+function reloadIntroduceApiReload() {
+    initAiLoading.value = true;
+    initAiLoadingText.value = '开始生成故事梗概';
+    realDom.innerHTML += `<h2 class="text-content-title" style="margin:10px 0 10px">剧本简介</h2>`;
+    new Promise(reslove => {
+        createOutline().then(data => {
+            initAiLoadingText.value = '故事梗概生成中';
+            if (data) {
+                try {
+                    mainScript.title.value = data['剧本名称'] || '示例剧本';
+
+                    const formatData = Object.keys(data)
+                        .filter(key => key != '剧本名称')
+                        .map((key: any) => {
+                            return `<p><b>${key}:</b> ${data[key]}</p>`;
+                        });
+
+                    Typewriter(formatData, '故事梗概', 10, 'synopsis', reslove);
+                } catch (e) {
+                    reslove('');
+                }
+            }
+        });
+    })
+        .then(() => {
+            initAiLoadingText.value = '开始生成大元素';
+            return new Promise(reslove => {
+                create_main().then(data => {
+                    initAiLoadingText.value = '大元素生成中';
+                    if (data && data.length > 0) {
+                        const formatData = data.map(item => {
+                            return (
+                                Object.keys(item)
+                                    .map(key => {
+                                        return `<p><b>${key}:</b>${item[key]}</p>`;
+                                    })
+                                    .join('') + `、<p><br></p>`
+                            );
+                        });
+                        Typewriter(
+                            formatData,
+                            '大元素',
+                            11,
+                            'synopsis',
+                            reslove
+                        );
+                    }
+                });
+            });
+        })
+        .then(() => {
+            initAiLoadingText.value = '开始生成人物信息';
+            return new Promise(reslove => {
+                create_role().then(data => {
+                    initAiLoadingText.value = '人物信息生成中';
+                    if (data && data.length > 0) {
+                        const formatData = data.map(item => {
+                            return (
+                                Object.keys(item)
+                                    .map(key => {
+                                        return `<p><b>${key}:</b>${item[key]}</p>`;
+                                    })
+                                    .join('') + `、<p><br></p>`
+                            );
+                        });
+                        Typewriter(
+                            formatData,
+                            '人物信息',
+                            12,
+                            'synopsis',
+                            reslove
+                        );
+                    }
+                });
+            });
+        })
+        .then(() => {
+            initAiLoadingText.value = '开始生成故事线';
+            return new Promise(reslove => {
+                create_storyline().then(data => {
+                    initAiLoadingText.value = '故事线生成中';
+                    if (data && data.length > 0) {
+                        const formatData = data.map(item => {
+                            return (
+                                Object.keys(item)
+                                    .map(key => {
+                                        return `<p><b>${key}:</b>${item[key]}</p>`;
+                                    })
+                                    .join('') + `、<p><br></p>`
+                            );
+                        });
+                        Typewriter(
+                            formatData,
+                            '故事线',
+                            13,
+                            'synopsis',
+                            reslove
+                        );
+                    }
+                });
+            });
+        })
+        .catch(() => {
+            console.log('err');
+        })
+        .finally(() => {
+            localStorage.setItem('Introduce_history', JSON.stringify(Prequel));
+            reloadMainScriptApiReload();
+        });
+}
+
+async function reloadIntroduceHistory() {
+    let introduceHistory = localStorage.getItem('Introduce_history');
+    if (Prequel.content.length <= 0 && introduceHistory) {
+        try {
+            introduceHistory = JSON.parse(introduceHistory);
+            Prequel.content = introduceHistory.content.map(item => {
+                menuList.value.push({
+                    label: item.sessionTitle,
+                    id: item.sessionId,
+                    menuType: 'synopsis'
+                });
+                return item;
+            });
+            Prequel.title = introduceHistory.title;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    reloadMainScriptHistory();
+}
+
+async function reloadMainScriptHistory() {
+    nowPercent.value = 0;
+    initAiLoading.value = false;
+    initAiLoadingText.value = 'Final Phrase 剧本生成中';
+    realDom.innerHTML += `<h2 id="script-info" class="text-content-title" style="margin:10px 0 10px">剧本内容</h2>`;
+    activeItemId.value = 'script-info';
+    menuList.value.push({
+        label: '剧本内容',
+        id: 'script-info',
+        menuType: 'script'
+    });
+    let mainScriptHistory = localStorage.getItem('MainScript_history');
+
+    try {
+        mainScriptHistory = JSON.parse(mainScriptHistory);
+    } catch (e) {
+        console.log(e);
+    }
+    if (mainScriptHistory && mainScriptHistory.content.length > 0) {
+        loadPercentage.value =
+            Math.floor((100 * 100) / mainScriptHistory.content.length) / 100;
+        for (let index = 0; index < mainScriptHistory.content.length; index++) {
+            let item = mainScriptHistory.content[index];
+            const mockDiv = document.createElement('div');
+            mockDiv.innerHTML = item.text;
+            let formatData = [];
+            mockDiv.querySelectorAll('p').forEach((item, index) => {
+                formatData.push(item.outerHTML);
+            });
+
+            // .map(dom => {
+            //     return dom.outerHTML;
+            // });
+            await new Promise(_reslove => {
+                Typewriter(
+                    formatData,
+                    item.sessionTitle,
+                    item.sessionId.split('-')[1],
+                    'script',
+                    _reslove
+                );
+            });
+        }
+    }
+    showMenu.value = true;
+}
+onMounted(async () => {
     // 获取query值
+    console.log('show start');
+
     isPreview.value = $route?.query?.preview === '1' ? true : false;
     $route?.query?.preview === '1' &&
         paragraph.content.map(item => {
@@ -109,6 +605,20 @@ onMounted(() => {
                 item.sessionTitle
             }</h3>${removeInputTags(item.text)}`;
         });
+    // document.addEventListener();
+
+    realDom = document.querySelector('.select-content');
+    loadingDom = document.querySelector('#loading-text');
+    menuList.value = [];
+    Prequel.content = [];
+    state.content = [];
+    if (!$route.query.showScript) {
+        reloadIntroduceApiReload();
+        // reloadMainScriptApiReload();
+    } else {
+        reloadIntroduceHistory();
+    }
+    return;
     function showNextItem(index: number) {
         if ($route.path !== '/showPlay') {
             return;
@@ -248,48 +758,22 @@ onMounted(() => {
 });
 
 const scrollToElement = (data: any) => {
-    activeItemId.value = data.sessionId;
-    const targetElement = document.getElementById(
-        `content-item-${data.sessionId}`
-    );
+    activeItemId.value = data.id;
+    const targetElement = document.getElementById(`${data.id}-h3`);
     if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 };
 
-function onScroll() {
-    for (let i = 0; i < paragraph.content.length; i++) {
-        if ($route.path !== '/showPlay') {
-            return;
-        }
-        const item = paragraph.content[i];
-        const targetElement: any = document.getElementById(
-            `content-item-${item.sessionId}`
-        );
-        // 获取目标元素的位置信息
-
-        let elementRect: any = targetElement?.getBoundingClientRect();
-        // 检查元素是否进入视口
-        if (
-            elementRect?.top >= 0 &&
-            elementRect?.bottom <= window.innerHeight
-        ) {
-            // 当元素进入视口时，触发提示
-            activeItemId.value = i + 1;
-        }
-    }
-}
 bodyDom.addEventListener('scroll', onScroll);
 
 onBeforeUnmount(() => {
     bodyDom.removeEventListener('scroll', onScroll);
 });
-const { title, content } = toRefs(state);
 </script>
 <style>
-
 .el-drawer {
-    min-width: 700px!important;
+    min-width: 700px !important;
 }
 .el-drawer h3 {
     text-align: left;
@@ -339,7 +823,7 @@ const { title, content } = toRefs(state);
         }
     }
     .select-content {
-        padding: 20px 20px 100px;
+        padding: 10px 20px 100px;
     }
 }
 .loading-content {

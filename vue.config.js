@@ -1,8 +1,8 @@
 /*
  * @Author: 777
  * @Date: 2021-07-23 18:27:20
- * @LastEditTime: 2024-04-28 11:28:07
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-08-03 12:31:18
+ * @LastEditors: suqi suqi.777@bytedance.com
  * @FilePath: /final-phrase-demo/vue.config.js
  */
 'use strict';
@@ -45,20 +45,29 @@ module.exports = {
             warnings: false,
             errors: true
         },
-        before: function (app, server) {
-            mock.forEach(item => {
-                if (item.method === 'GET') {
-                    app.get(item.url, (req, res) => {
-                        item.result(req, res);
-                    });
+        proxy: {
+            '/api': {
+                target: 'http://47.251.101.232:8005', // 后台接口域名
+                changeOrigin: true, // 允许跨域
+                pathRewrite: {
+                    '^/api': '' // 重写路径，将前缀/api转为/
                 }
-                if (item.method === 'POST') {
-                    app.post(item.url, (req, res) => {
-                        item.result(req, res);
-                    });
-                }
-            });
+            }
         }
+        // before: function (app, server) {
+        //     mock.forEach(item => {
+        //         if (item.method === 'GET') {
+        //             app.get(item.url, (req, res) => {
+        //                 item.result(req, res);
+        //             });
+        //         }
+        //         if (item.method === 'POST') {
+        //             app.post(item.url, (req, res) => {
+        //                 item.result(req, res);
+        //             });
+        //         }
+        //     });
+        // }
     },
 
     configureWebpack: {

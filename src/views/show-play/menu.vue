@@ -1,25 +1,33 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-25 14:15:10
- * @LastEditors: 777
- * @LastEditTime: 2024-03-27 10:23:54
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-08-04 21:03:34
  * @FilePath: /final-phrase-demo/src/views/show-play/menu.vue
  * @Description: 
 -->
 <template>
     <div class="sidebar" :class="{ collapsed: isCollapsed }">
         <div class="collapse-button" @click="toggleCollapse">
-            <el-icon v-if="isCollapsed"><DArrowRight /></el-icon>
-            <el-icon v-else><DArrowLeft /></el-icon>
+            <el-icon v-if="isCollapsed"><Expand /></el-icon>
+            <el-icon v-else><Fold /></el-icon>
         </div>
-        <ul class="sidebar-content">
+        <ul v-show="!isCollapsed" class="sidebar-content">
             <li
-                :class="{ active: activeItemId === item.sessionId }"
-                v-for="(item, index) in props.menuItems"
+                :class="{ active: activeItemId === item.id }"
+                v-for="(item, index) in props.menuItems.filter(_item => {
+                    if ($route.query.showScript) {
+                        if (_item.menuType === 'script') {
+                            return _item
+                        }
+                    } else {
+                        return _item
+                    }
+                })"
                 :key="item.sessionTitle"
                 @click="selectMenuItem(item)"
             >
-                {{ isCollapsed ? ChOrder(index + 1) : item.sessionTitle }}
+                {{ item.label }}
             </li>
         </ul>
     </div>
@@ -28,6 +36,8 @@
 <script lang="ts" setup>
 import { ref, defineProps, defineEmits } from 'vue';
 import { ChOrder } from '@/utils';
+import { useRoute } from 'vue-router';
+const $route = useRoute();
 
 const props = defineProps({
     menuItems: {
@@ -39,8 +49,8 @@ const props = defineProps({
         default: false
     },
     activeItemId: {
-        type: Number,
-        default: 1
+        type: String,
+        default: ''
     }
 });
 
@@ -89,35 +99,34 @@ const toggleCollapse = () => {
 
 ul {
     list-style: none;
-    padding: 0;
+    padding: 0 10px;
     margin: 0;
 }
 
 li {
-    background-color: #e9f1e9;
-    padding: 15px;
+    /* background-color: #e9f1e9; */
+    padding: 5px;
     cursor: pointer;
-    border: 1px solid #fff;
-    border-radius: 20px;
+    /* border: 1px solid #fff; */
+    font-weight: 600;
 }
 
 .active {
-    opacity: 0.8;
-    background-color: #b1c6a7;
-    color: #fff;
+    color: #4096fe;
 }
 
 li:hover {
-    opacity: 0.5;
+    /* opacity: 0.5; */
+    color: #4096fe;
 }
 
 .collapse-button {
     width: 100%;
     padding: 10px;
+    font-size: 20px;
     border: none;
-    background-color: #e9f2f5;
     cursor: pointer;
-    text-align: center;
+    text-align: left;
     border-radius: 20px;
 }
 </style>

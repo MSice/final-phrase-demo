@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-05-19 10:41:38
- * @LastEditors: suqi04
+ * @LastEditTime: 2024-08-03 13:50:30
+ * @LastEditors: suqi suqi.777@bytedance.com
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
 -->
@@ -46,10 +46,19 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="历史时代">
-                    <el-input
+                    <el-select
                         v-model="creationFormParams.agruements.historicalEra"
+                        collapse-tags
                         placeholder="请输入历史时代(选填)"
-                    />
+                        @change="selectChange"
+                    >
+                        <el-option
+                            v-for="(item, index) in historyBc"
+                            :key="index"
+                            :label="item.desc"
+                            :value="index"
+                        />
+                    </el-select>
                 </el-form-item>
             </el-form>
             <el-form
@@ -111,7 +120,7 @@
             </el-form>
         </div>
         <div class="btn-group">
-            <el-button type="primary" @click.stop="nextPath"
+            <el-button type="primary" @click.stop="nextPath(false)"
                 >没有想法,直接生成</el-button
             >
             <el-button type="primary" @click="nextEndShow = true"
@@ -127,10 +136,7 @@
                 <div class="creation-btn" @click.stop="nextPath">
                     免费生成6场
                 </div>
-                <div
-                    class="creation-btn creation-btn-vip"
-                    @click.stop
-                >
+                <div class="creation-btn creation-btn-vip" @click.stop>
                     <img src="./assets/VIP.png" alt="" />
                     VIP生成全部
                     <div class="creation-btn-bc">即刻开通</div>
@@ -146,12 +152,15 @@ import { ref, reactive, onMounted } from 'vue';
 import paramsStore from '@/store/paramsStore';
 const { creationFormParams } = paramsStore();
 
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElLoading } from 'element-plus';
 
 import { useRouter } from 'vue-router';
+
+import { update_bg, start, create_role } from '@/api';
 const router = useRouter();
 
 const nextEndShow = ref(false);
+const loadingText = ref('剧本元素填充中...');
 const detailedScriptTypeList = reactive([
     '悬疑',
     '喜剧',
@@ -162,11 +171,48 @@ const detailedScriptTypeList = reactive([
     '音乐',
     '体育'
 ]);
+const historyBc = [
+    { backgroud: '现代', desc: '现代' },
+    { backgroud: '民国', desc: '民国时期,确定出一个大概的时期' },
+    { backgroud: '古代', desc: '古代,确定出一个朝代' }
+];
 const noneDisableDetailedScriptTypeList = reactive(['悬疑']);
 
-function nextPath(type = 0) {
-    router.push({
-        path: type === 1 ? '/vipPage' : '/showPlay'
+async function nextPath(btnType = true, type = 0) {
+    const loading = ElLoading.service({
+        lock: true,
+        text: loadingText
+    });
+
+    setTimeout(() => {
+        loadingText.value = `剧本准备生成中...`;
+    }, 15000);
+    if (`${creationFormParams.agruements.historicalEra}` === 'undefined' || !btnType || !`${creationFormParams.agruements.historicalEra}`) {
+        await selectChange(0);
+    }
+    console.log(creationFormParams.agruements);
+    
+    start()
+        .then((data: any) => {
+            console.log(data);
+            
+            if (data.success) {
+                router.push({
+                    path: type === 1 ? '/vipPage' : '/showPlay'
+                });
+            } else {
+                ElMessage.warning("网络异常，请稍后重试!")
+            }
+        })
+        .finally(() => {
+            loading.close();
+        });
+}
+
+async function selectChange(val: any) {
+    console.log(historyBc[val]);
+    await update_bg(historyBc[val]).then((data: any) => {
+        console.log(data);
     });
 }
 

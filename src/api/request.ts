@@ -1,8 +1,8 @@
 /*
  * @Author: 777
  * @Date: 2024-03-19 19:44:07
- * @LastEditors: 777
- * @LastEditTime: 2024-03-24 16:09:24
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-08-03 13:51:13
  * @FilePath: /final-phrase-demo/src/api/request.ts
  * @Description:
  */
@@ -25,7 +25,7 @@ import { useRouter } from 'vue-router';
 
 const instance = axios.create({
     baseURL: '/api', // 开发环境下的跨域解决
-    timeout: 5000, //配置超时时间
+    timeout: 50000000000000, //配置超时时间
     withCredentials: true, //携带凭证允许
     headers: {
         'content-type': 'application/json'
@@ -33,7 +33,7 @@ const instance = axios.create({
 });
 
 /* 请求拦截 */
-instance.interceptors.request.use(requestAuth, err => Promise.reject(err));
+// instance.interceptors.request.use(requestAuth, err => Promise.reject(err));
 
 /* 响应拦截 */
 instance.interceptors.response.use(responseSuccess, err => {
@@ -97,7 +97,7 @@ function request(url: string, params: any, config: any, method: Method): any {
             params: method === 'GET' ? params : null, // get请求不携带data，params放在url上
             ...config // 用户自定义配置，可以覆盖前面的配置
         })
-        .then((res: any) => checkRes(res)) //这里将数据data解构出来了，直接放到下一步checkRes中去了
+        .then((res: any) => res.data) //这里将数据data解构出来了，直接放到下一步checkRes中去了
         .catch(err => {
             ElMessage.error('请求失败');
         });

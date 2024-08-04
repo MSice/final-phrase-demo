@@ -1,8 +1,8 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-25 19:43:23
- * @LastEditors: 777
- * @LastEditTime: 2024-04-14 22:06:48
+ * @LastEditors: suqi suqi.777@bytedance.com
+ * @LastEditTime: 2024-08-04 01:19:40
  * @FilePath: /final-phrase-demo/src/views/edit-play/AllContent.vue
  * @Description: 
 -->
@@ -43,7 +43,8 @@ nowTitle.value = title.value;
 const text = ref('');
 
 onMounted(() => {
-    // console.log(content.value);
+    console.log(content);
+    
     content.value.map((item: any) => {
         text.value += `<h3>${item.sessionTitle}</h3>${textHandle(item.text)}`;
     });
@@ -64,13 +65,7 @@ const saveInfo = (text: any) => {
             text: '<div>' + groups[i + 1] + '</div>'
         });
     }
-
-    for (let i = 0; i < groups.length; i++) {
-        if (processedData[i]) {
-            content.value[i].sessionTitle = processedData[i].title;
-            content.value[i].text = processedData[i].text;
-        }
-    }
+    content.value = processedData
 };
 
 const nextHandle = () => {

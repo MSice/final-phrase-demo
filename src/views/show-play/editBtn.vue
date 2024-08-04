@@ -2,7 +2,7 @@
  * @Author: 777
  * @Date: 2024-03-25 16:26:33
  * @LastEditors: suqi suqi.777@bytedance.com
- * @LastEditTime: 2024-07-03 21:23:33
+ * @LastEditTime: 2024-08-04 01:19:10
  * @FilePath: /final-phrase-demo/src/views/show-play/editBtn.vue
  * @Description: 
 -->
@@ -47,6 +47,8 @@ async function downLoadAll() {
     }
 }
 const goPage = (type: number) => {
+    // console.log(state);
+    
     let query = {
         type
     }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rich Text Typewriter Effect</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    padding: 20px;
+}
+</style>
+</head>
+<body>
+<div id="typewriter"></div>
+
+<script>
+const typewriter = document.getElementById('typewriter');
+const text = 'Hello, <strong>world!</strong> This is an <em>example</em> of rich text typing.';
+
+let index = 0;
+let inTag = false;
+let currentText = '';
+let tagBuffer = '';
+
+function typeWriter() {
+    if (index < text.length) {
+        const char = text.charAt(index);
+
+        if (char === '<') {
+            inTag = true;
+            tagBuffer = '<';
+        } else if (inTag) {
+            tagBuffer += char;
+            if (char === '>') {
+                inTag = false;
+                currentText += tagBuffer;
+                tagBuffer = '';
+            }
+        } else {
+            currentText += char;
+        }
+
+        typewriter.innerHTML = currentText;
+        index++;
+        setTimeout(typeWriter, 120); // Adjust the speed of typing effect here
+    }
+}
+
+typeWriter();
+</script>
+</body>
+</html>
