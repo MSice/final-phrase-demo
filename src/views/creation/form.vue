@@ -1,7 +1,7 @@
 <!--
  * @Author: 777
  * @Date: 2024-03-24 21:29:19
- * @LastEditTime: 2024-08-03 13:50:30
+ * @LastEditTime: 2024-08-07 21:38:01
  * @LastEditors: suqi suqi.777@bytedance.com
  * @FilePath: /final-phrase-demo/src/views/creation/form.vue
  * @Description: 文件描述
@@ -197,6 +197,7 @@ async function nextPath(btnType = true, type = 0) {
             console.log(data);
             
             if (data.success) {
+                loading.close();
                 router.push({
                     path: type === 1 ? '/vipPage' : '/showPlay'
                 });

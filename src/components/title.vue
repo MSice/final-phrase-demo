@@ -2,7 +2,7 @@
  * @Author: 777
  * @Date: 2024-03-24 19:36:36
  * @LastEditors: suqi suqi.777@bytedance.com
- * @LastEditTime: 2024-07-03 21:22:29
+ * @LastEditTime: 2024-08-07 21:55:47
  * @FilePath: /final-phrase-demo/src/components/title.vue
  * @Description: 
 -->
@@ -44,7 +44,7 @@
             > 预览 </el-button>
             <el-button
                 type="primary"
-                @click="saveInfo"
+                @click="saveInfo(0)"
             > 保存 </el-button>
             <el-button
                 v-if="$route.query.type && $route.query.type === '2'"
@@ -178,12 +178,14 @@ const nextHandle = () => {
     }
 };
 const saveInfo = (type = 0) => {
+    
+    localStorage.setItem('MainScript_history', JSON.stringify(state));
     setTimeout(() => {
         router.push({
             path: '/showPlay',
             query: {
                 showScript: 'read',
-                preview: type
+                preview: 1
             }
         });
     }, 100);

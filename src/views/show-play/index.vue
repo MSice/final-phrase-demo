@@ -2,7 +2,7 @@
  * @Author: 777
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi suqi.777@bytedance.com
- * @LastEditTime: 2024-08-04 21:48:40
+ * @LastEditTime: 2024-08-07 22:23:18
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -339,10 +339,16 @@ function reloadMainScriptApiReload() {
                                         _data.success &&
                                         _data.content
                                     ) {
+                                        try {
+                                            _data.content = JSON.stringify(_data.content)
+                                        } catch(e) {
+                                            console.log("内容格式异常");
+                                            
+                                        }
                                         _data = JSON.parse(
                                             _data.content
-                                                .replace(/\\n/g, '')
-                                                .replace(/\n/g, '')
+                                                // .replace(/\\n/g, '')
+                                                // .replace(/\n/g, '')
                                         );
                                         // 筛选内容前面的key
                                         let formatData = Object.keys(_data)
@@ -356,6 +362,9 @@ function reloadMainScriptApiReload() {
                                             )
                                             .map(key => {
                                                 let _line = _data[key];
+                                                if (key === "剧本内容") {
+                                                    _line = _line.replace(/\\n/g, '</p><p>').replace(/\n/g, '</p><p>')
+                                                }
                                                 return `<p><b>${key}:</b> ${_data[key]}</p>`;
                                             });
                                         // 整理元素
@@ -384,7 +393,7 @@ function reloadMainScriptApiReload() {
                                         formatData = [
                                             ...formatData,
                                             ...elementList,
-                                            `<p><b>剧本内容: </b></p><p>${_data['剧本内容']}</p>`
+                                            `<p><b>剧本内容: </b></p><p>${_data['剧本内容'].replace(/\\n/g, '</p><p>').replace(/\n/g, '</p><p>')}</p>`
                                         ];
 
                                         Typewriter(
@@ -549,6 +558,7 @@ async function reloadIntroduceHistory() {
 }
 
 async function reloadMainScriptHistory() {
+    
     nowPercent.value = 0;
     initAiLoading.value = false;
     initAiLoadingText.value = 'Final Phrase 剧本生成中';
@@ -566,9 +576,12 @@ async function reloadMainScriptHistory() {
     } catch (e) {
         console.log(e);
     }
+    console.log(mainScriptHistory,);
+    
     if (mainScriptHistory && mainScriptHistory.content.length > 0) {
         loadPercentage.value =
             Math.floor((100 * 100) / mainScriptHistory.content.length) / 100;
+        
         for (let index = 0; index < mainScriptHistory.content.length; index++) {
             let item = mainScriptHistory.content[index];
             const mockDiv = document.createElement('div');
@@ -577,10 +590,10 @@ async function reloadMainScriptHistory() {
             mockDiv.querySelectorAll('p').forEach((item, index) => {
                 formatData.push(item.outerHTML);
             });
-
             // .map(dom => {
             //     return dom.outerHTML;
             // });
+            console.log(loadPercentage.value, nowPercent.value, item.sessionId.split('-')[1]);
             await new Promise(_reslove => {
                 Typewriter(
                     formatData,
@@ -590,6 +603,7 @@ async function reloadMainScriptHistory() {
                     _reslove
                 );
             });
+            console.log(loadPercentage.value, nowPercent.value);
         }
     }
     showMenu.value = true;
@@ -613,8 +627,8 @@ onMounted(async () => {
     Prequel.content = [];
     state.content = [];
     if (!$route.query.showScript) {
-        reloadIntroduceApiReload();
-        // reloadMainScriptApiReload();
+        // reloadIntroduceApiReload();
+        reloadMainScriptApiReload();
     } else {
         reloadIntroduceHistory();
     }

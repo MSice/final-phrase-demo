@@ -2,7 +2,7 @@
  * @Author: 777
  * @Date: 2024-03-25 19:43:23
  * @LastEditors: suqi suqi.777@bytedance.com
- * @LastEditTime: 2024-08-04 01:19:40
+ * @LastEditTime: 2024-08-07 22:25:03
  * @FilePath: /final-phrase-demo/src/views/edit-play/AllContent.vue
  * @Description: 
 -->
@@ -61,7 +61,8 @@ const saveInfo = (text: any) => {
     let processedData = [];
     for (let i = 0; i < groups.length; i += 2) {
         processedData.push({
-            title: groups[i],
+            sessionId: `script-${i / 2}`,
+            sessionTitle: groups[i],
             text: '<div>' + groups[i + 1] + '</div>'
         });
     }
