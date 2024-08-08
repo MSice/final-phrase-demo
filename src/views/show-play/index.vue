@@ -2,7 +2,7 @@
  * @Author: 777
  * @Date: 2024-03-24 17:18:43
  * @LastEditors: suqi suqi.777@bytedance.com
- * @LastEditTime: 2024-08-07 22:23:18
+ * @LastEditTime: 2024-08-08 10:04:22
  * @FilePath: /final-phrase-demo/src/views/show-play/index.vue
  * @Description: 
 -->
@@ -627,8 +627,8 @@ onMounted(async () => {
     Prequel.content = [];
     state.content = [];
     if (!$route.query.showScript) {
-        // reloadIntroduceApiReload();
-        reloadMainScriptApiReload();
+        reloadIntroduceApiReload();
+        // reloadMainScriptApiReload();
     } else {
         reloadIntroduceHistory();
     }
